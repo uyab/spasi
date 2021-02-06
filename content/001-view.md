@@ -57,7 +57,7 @@ Secara kasat mata, kita bisa melihat ada tiga komponen utama yang menyusun halam
 2. Grafik
 3. Tabel
 
-Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Oleh karena itu, setelah mengetahui komponen penyusun dari sebuah halaman, maka langkah berikutnya adalah membuat _**sub view**_ untuk masing-masing komponen tersebut. Setelah itu, kita cukup memanggil _**@include**_ dari view utama.
+Setelah mengetahui komponen penyusun halaman dashboard tersebut ada tiga, maka langkah berikutnya adalah membuat _**sub view**_ untuk masing-masing komponen tersebut. Setelah itu, kita cukup memanggil _**@include**_ dari view utama.
 
 ```php
 @extends('layout')
@@ -74,23 +74,71 @@ Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. O
 ```
 **Sederhana dan sangat mudah dilakukan bukan?**
 
+> Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Maksudnya adalah ketika kita bilang ada a, b, dan c di aplikasi, maka a, b, dan c itu juga idealnya terlihat secara eksplisit di kode penyusun aplikasi, entah itu sebagai nama file, nama fungsi, atau nama Class. 
+>
+
 ## Penamaan Sub View
-Kamu mungkin bertanya kenapa file blade pada contoh sebelumnya diberi nama `_filter.blade.php` dan bukan `filter.blade.php` saja. Jawabannya juga sangat sederhana: file yang diawali _underscore_ berarti sub view.
+Kamu mungkin bertanya kenapa file blade pada contoh sebelumnya diberi nama `_filter.blade.php` dan bukan `filter.blade.php` saja. Jawabannya juga sangat sederhana: file yang diawali _underscore_ menandakan bahwa file tersebut adalah sub view.
 
 Dengan menambahkan _underscore_ sebagai prefix, maka kita bisa melihat dengan jelas mana kelompok file yang merupakan view utama dan mana file yang merupakan sub view.
 
-//TODO gambar perbandingan unserscore vs normal
+//TODO gambar perbandingan underscore vs normal
 
 ## Layout vs Konten
-View utama untuk mengatur layout, subview untuk merender konten.
+Setelah paham cara memecah view agar tidak membengkak, selanjutnya kita perlu paham **kapan** dan **dimana** sebuah view harus dipecah. Terkadang <del>gambar</del> kode bisa menggantikan 1000 kata, jadi mari kita lihat contoh saja.
+
+
+
+//TODO: gambar layout implisit
+
+//TODO: gambar layout eksplisit
+
+Dengan memindahkan tag HTML untuk layouting di view utama, kamu bisa mengganti susunan layout dengan sangat mudah. Cukup mengubah view utamanya saja. Sub view tidak perlu diubah.
+
+> :bulb: **View utama untuk mengatur layout, subview untuk merender konten**. Ketika melihat view utama, pastikan kamu bisa membayangkan bagaimana layout halamannya.
+
+
 
 ## Tidak Mencampur PHP dan JS
 Mencampur kode PHP dan Javascript akan mengurangi readability dan kemampuan editor/IDE untuk menganalisis kode.
-## Format Tanggal
-Y-m-d untuk mesin, d-m-Y untuk manusia.
-## Format Angka
-Rata kanan jika di dalam tabel.
-number_format();
-## View Composer Terlalu Magic
+
+Passing sebagai data-attribute.
+
+## Jangan Pisahkan JS dan Pasangan HTML-nya
+
+Kasus yang sering ditemui ketika koding di View adalah menambahkan Javascript untuk membuat halaman yang lebih interaktif. 
+
+Contoh pertama, menggunakan halaman dashboard sebelumnya, ternyata perlu ada tambahan tombol "Export Excel" di bagian Tabel.
+
+
+
+Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini: 
+
+1. Tambahkan event onclick di tombol "Tampilkan"
+2. Request ke server via Ajax
+3. Update *chart*
+4. Update tabel
+
+Karena aksi ini melibatkan beberapa sub view, maka lebih tepat jika kode Javascriptnya diletakkan di view utama.
+
+//TODO skeleton kode
+
+Untuk memudahkan pembacaan kode, maka disarankan untuk menambahkan *identifier* di view utama, misalnya menggunakan atribut **"id"** yang berfungsi sebagai "rambu penunjuk arah". Jadi, ketika nanti ada programmer yang membaca kode Javascript, dia bisa langsung menentukan pasangan kode HTML-nya ada di sub view yang mana tanpa harus menelusuri satu per satu.
+
+
+
+> :bulb: Ada dua prinsip penting yang harus dibiasakan untuk bisa menulis kode yang rapi:
+>
+> 1. **Memecah** yang besar menjadi beberapa bagian kecil.
+> 2. **Dekatkan** yang saling membutuhkan. 
+>
+> Resapi, pahami, praktekkan, dan biasakan. Prinsip diatas berlaku di semua bahasa pemrograman dan framework.
+
+
+
+## View Composer Terlalu Magic, Hindari!
+
 Variable yang di-inject dari View Composer sulit untuk di-trace dari mana asalnya.
 Manfaatkan pemanggilan secara eksplisit menggunakan View Injection.
+
+Konsepnya sama dengan global variable, ujug-ujug ada.
