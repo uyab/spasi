@@ -1,13 +1,15 @@
-# VIEW
-View sering dianaktirikan ketika sedang koding karena biasanya disini kita akan lebih banyak menulis _tag_ HTML dibanding  _real code_. Ketika membahas _clean code_, biasanya contoh yang disertakan selalu dalam bentuk  kode PHP. Jarang sekali dibahas tentang View. Mungkin karena View bukan "PHP", tidak ada _logic_, dan jarang dijadikan tolak ukur kemampuan seorang programmer ketika *interview*.
+# View
+
+<!-- View sering dianaktirikan ketika sedang koding karena biasanya disini kita akan lebih banyak menulis _tag_ HTML dibanding  _real code_. Ketika membahas _clean code_, biasanya contoh yang disertakan selalu dalam bentuk  kode PHP. Jarang sekali dibahas tentang View. Mungkin karena View bukan "PHP", tidak ada _logic_, dan jarang dijadikan tolak ukur kemampuan seorang programmer ketika *interview*.
+ -->
 
 Jika kamu baru belajar Laravel, besar kemungkinan posisimu saat ini adalah "*fullstack*" web developer. Secara sederhana, "*fullstack*" berarti kamu bisa membuat sebuah aplikasi web secara mandiri mulai dari desain basis data, melakukan query SQL, koding *logic* aplikasi di Laravel, hingga membuat tampilan dengan HTML, CSS, dan Javascript. 
 
 Jika dibawa ke lingkup Laravel, berarti kamu harus mahir dalam membuat Model (interaksi dengan basisdata), View (tampilan), dan Controller (*logic* aplikasi). Setelah menguasai ketiga elemen itu, kamu bisa mendeklarasikan diri <del>sebagai avatar</del> telah menguasai MVC.
 
-Nah, karena saat ini kamu masih harus berhubungan dengan View, maka posisinya harus kita setarakan dengan yang lain. Sebuah View yang clean sama pentingnya dengan Controller dan Model yang clean. Bahkan View harusnya bisa lebih diprioritaskan karena "membersihkan" View jauh lebih mudah dilakukan dibanding membersihkan Controller atau Model.
+Nah, karena saat ini kamu masih harus berhubungan dengan View, maka posisinya harus kita setarakan dengan yang lain. Sebuah View yang clean sama pentingnya dengan Controller dan Model yang clean. Bahkan View harusnya bisa lebih diprioritaskan karena "merapikan" View jauh lebih mudah dilakukan dibanding merapikan Controller atau Model.
 
-> Ketika kerja tim, dimana ada senior dan junior programmer, biasanya sang senior (orang yang punya wewenang mereviu kode) lebih mentoleransi View yang tidak rapi dibanding dibanding Controller atau Model. Kita harus mengubah pembiaraan ini. Semua aspek MVC sama pentingnya. View juga bagian dari kode, dia berhak mendapatkan perlakuan yang sama baiknya darimu.
+> View juga bagian dari kode, dia berhak mendapatkan perlakuan yang sama baiknya darimu.
 
 ## Memecah File
 Salah satu kemampuan yang harus dikuasai untuk menulis kode yang _friendly_ adalah keberanian untuk memecah kode atau _file_. 
@@ -99,7 +101,7 @@ Dengan memindahkan tag HTML untuk layouting di view utama, kamu bisa mengganti s
 
 
 
-## Tidak Mencampur Blok Kode Blade dan JS
+## Tidak Mencampur PHP dan JS
 Pemakaian editor atau IDE sudah menjadi hal yang wajar bagi programmer saat ini. Setiap keyword, setiap bahasa pemrograman bisa kamu atur _syxtax higlighting_-nya untuk memudahkan mengenali kode.
 
 //TODO gambar syntax higlighting bisa mengenali error
@@ -121,9 +123,11 @@ Dengan metode penulisan seperti di atas, kita bisa meminimalisir adanya _**kode 
 Dilihat dari kaca mata _resources_, _context switching_ itu mahal. Berpindah dari mode PHP ke mode Javascript juga sama. Oleh sebab itu penting bagi kita untuk bisa mengelompokkan masing-masing kode ke dalam "blok"-nya masing-masing.
 
 > _**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain. 
-> 
+> <br>
+> <br>
 > Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian kamu pegang _hape_, buka notififikasi, membalas komentar, lalu kembali melanjutkan membaca buku. Ada sekian detik waktu tambahan yang dibutuhkan otak kita untuk kembali fokus ke aktivitas membaca buku.
-> 
+> <br>
+> <br> 
 > _**Context switching**_ dalam waktu yang singkat dengan intensitas yang tinggi sangat mengganggu produktivitas dan proses belajar hal baru. Hindarilah semaksimal mungkin!
 
 ### Definisikan  _Dynamic Variable_ Di Awal Kode
@@ -198,14 +202,15 @@ Beberapa manfaat yang bisa kita dapat ketika menerapkan Service Injection antara
 #### 1. Didokumentasikan Secara Eksplisit
 Biasakan mengomentasi bagian kode yang "_magic_" untuk membantu programmer lain (atau dirimu sendiri, 3 bulan kemudian) ketika membacanya:
 
-    ```php
-    //layout.blade.php
-    
-    //@kategori berasal dari ViewComposerServiceProvider
-    @foreach($kategori as $item)
-    ...
-    @endforeach
-    ```
+```php
+//layout.blade.php
+
+//@kategori berasal dari ViewComposerServiceProvider
+@foreach($kategori as $item)
+...
+@endforeach
+```
+
 > **Bukankah manusia tempatnya lupa?**
 
 #### 2. Sudah Ada Konvensi
@@ -213,7 +218,7 @@ Sudah ada kesepakatan antar anggota tim yang diambil sebelumnya, bahwa semua var
 
 > Silakan googling dengan kata kunci "_readme driven development_".
 
-#### 2. Buat Service Provider Terpisah
+#### 3. Buat Service Provider Terpisah
 View Composer biasanya diletakkan di `AppServiceProvider`, sesuai contoh di dokumentasi resmi Laravel. Seiring berjalannya waktu, biasanya AppServiceProvider ini menjadi _**God Object**_ dan kodenya membengkak. Oleh sebab itu, buat dan daftarkanlah Service Provider baru, misalnya `ViewComposerServiceProvider`, khusus untuk mendaftarkan variabel global ke View.
 
 <hr>

@@ -6,21 +6,25 @@ return [
      */
     'title' => 'Spasi di Bulan Juli',
 
-
     /**
      * The author name.
      */
     'author' => 'Uyab',
 
-
     /**
      * The list of fonts to be used in the different themes.
      */
     'fonts' => [
-        //        'calibri' => 'Calibri-Regular.ttf',
-        //        'times' => 'times-regular.ttf',
+        'heading1' => 'UnicaOne-Regular.ttf',
+        'heading2' => 'FjallaOne-Regular.ttf',
+        'heading3' => 'FjallaOne-Regular.ttf',
+        'heading4' => 'Inter.ttf',
+        'body' => 'WorkSans.ttf',
+        // 'body' => 'NotoSerif-Regular.ttf',
+        // 'body' => 'Literata.ttf',
+        // 'monospace' => 'FiraCode.ttf',
+        'monospace' => 'JetBrainsMono.ttf',
     ],
-
 
     /**
      * Document Dimensions.
@@ -33,7 +37,6 @@ return [
         'margin_top' => 14,
     ],
 
-
     /**
      * Cover photo position and dimensions
      */
@@ -42,16 +45,14 @@ return [
         'dimensions' => 'width: 210mm; height: 297mm; margin: 0;',
     ],
 
-
     /**
      * Page ranges to be used with the sample command.
      */
     'sample' => [
         [1, 3],
         [80, 85],
-        [100, 103]
+        [100, 103],
     ],
-
 
     /**
      * A notice printed at the final page of a generated sample.
