@@ -171,7 +171,52 @@ Untuk memudahkan pembacaan kode, maka disarankan untuk menambahkan *identifier* 
 
 ## View Composer Terlalu Magic, Hindari!
 
-Variable yang di-inject dari View Composer sulit untuk di-trace dari mana asalnya.
-Manfaatkan pemanggilan secara eksplisit menggunakan View Injection.
+Pernahkan kamu mengalami sebuah momen dimana ketika sedang asik-asiknya _debugging_, lalu menemukan sebuah variabel, misalnya `$kategori`, tetapi tidak menemukan dari mana asal variabel tersebut. Tidak ada di Controller, tidak ada juga di View.
 
-Konsepnya sama dengan global variable, ujug-ujug ada.
+//TODO contoh kode view composer
+//TODO contoh kode controller (tidak ada passing variabelnya)
+
+### Apa Alternatifnya?
+
+Ada satu fitur di Laravel yang menurut saya sangat jarang dipakai, yaitu **Service Injection**.  
+
+//TODO contoh kode implementasi $kategori dengan service injection
+
+Dokumentasi resminya bisa dibaca di https://laravel.com/docs/master/blade#service-injection.
+
+Apa yang dituliskan secara eksplisit biasanya lebih mudah dibaca dan dipahami. Oleh sebab itu, eksplisitkanlah pemanggilan variabel global di View dengan menggunakan **Service Injection**.
+
+Beberapa manfaat yang bisa kita dapat ketika menerapkan Service Injection antara lain:
+1. Memaksa programmer membuat Class khusus untuk membungkus _logic_ mendapatkan variabel. Disini, kita sekaligus belajar menerapkan Single Responsibility Principle.
+2. Karena _logic_ ada di sebuah Class, maka menjadi lebih mudah dites, dibandingkan jika logic tersebut ada di Service Provider. Btw, pernah melakukan unit test terhadapt Service Provider di Laravel?
+
+//TODO gambar struktur folder ServiceInjection
+
+
+### Boleh, Asalkan...
+
+#### 1. Didokumentasikan Secara Eksplisit
+Biasakan mengomentasi bagian kode yang "_magic_" untuk membantu programmer lain (atau dirimu sendiri, 3 bulan kemudian) ketika membacanya:
+
+    ```php
+    //layout.blade.php
+    
+    //@kategori berasal dari ViewComposerServiceProvider
+    @foreach($kategori as $item)
+    ...
+    @endforeach
+    ```
+> **Bukankah manusia tempatnya lupa?**
+
+#### 2. Sudah Ada Konvensi
+Sudah ada kesepakatan antar anggota tim yang diambil sebelumnya, bahwa semua variabel global yang ditemukan di  View pasti berasal dari `ViewComposerServiceProvider`. Tapi ingat, konvensi tanpa dokumentasi juga rawan dilupakan. Oleh sebab itu, tulislah semua konvensi di `readme.md`.
+
+> Silakan googling dengan kata kunci "_readme driven development_".
+
+#### 2. Buat Service Provider Terpisah
+View Composer biasanya diletakkan di `AppServiceProvider`, sesuai contoh di dokumentasi resmi Laravel. Seiring berjalannya waktu, biasanya AppServiceProvider ini menjadi _**God Object**_ dan kodenya membengkak. Oleh sebab itu, buat dan daftarkanlah Service Provider baru, misalnya `ViewComposerServiceProvider`, khusus untuk mendaftarkan variabel global ke View.
+
+<hr>
+
+> Apa yang ditulis dengan cepat, apalagi tidak ditulis sama sekali (implisit), biasanya hanya bisa dibaca dengan lambat (ehem, resep dokter).
+> Sebaliknya, apa yang eksplisit (lebih butuh waktu untuk ditulis) biasanya lebih cepat dibaca. Untuk kasus ini eksplisit > implisit.
