@@ -99,10 +99,43 @@ Dengan memindahkan tag HTML untuk layouting di view utama, kamu bisa mengganti s
 
 
 
-## Tidak Mencampur PHP dan JS
-Mencampur kode PHP dan Javascript akan mengurangi readability dan kemampuan editor/IDE untuk menganalisis kode.
+## Tidak Mencampur Blok Kode Blade dan JS
+Pemakaian editor atau IDE sudah menjadi hal yang wajar bagi programmer saat ini. Setiap keyword, setiap bahasa pemrograman bisa kamu atur _syxtax higlighting_-nya untuk memudahkan mengenali kode.
 
-Passing sebagai data-attribute.
+//TODO gambar syntax higlighting bisa mengenali error
+
+Mencampur kode PHP dan Javascript (berlaku juga untuk bahasa lain) akan mengurangi readability (seberapa mudah kode dibaca/dipahami) dan kemampuan editor/IDE untuk menganalisis kode.
+
+//TODO gambar contoh kode blade + JS campur
+
+Ketika kebutuhan aplikasi mengharuskan adanya "interaksi" antara kode Blade(PHP) dan Javascript, misalnya variable Javascript yang berasal dari variable PHP, ada dua cara yang bisa dilakukan:
+1. Passing sebagai data-attribute
+2. Definisikan _dynamic variable_ di awal kode
+
+### Passing Variable Sebagai `data-attribute`
+
+// TODO contoh kode
+
+Dengan metode penulisan seperti di atas, kita bisa meminimalisir adanya _**kode oplosan**_, yaitu suatu kondisi bercampurnya 2 bahasa dalam **satu baris kode**.
+
+Dilihat dari kaca mata _resources_, _context switching_ itu mahal. Berpindah dari mode PHP ke mode Javascript juga sama. Oleh sebab itu penting bagi kita untuk bisa mengelompokkan masing-masing kode ke dalam "blok"-nya masing-masing.
+
+> _**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain. 
+> 
+> Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian kamu pegang _hape_, buka notififikasi, membalas komentar, lalu kembali melanjutkan membaca buku. Ada sekian detik waktu tambahan yang dibutuhkan otak kita untuk kembali fokus ke aktivitas membaca buku.
+> 
+> _**Context switching**_ dalam waktu yang singkat dengan intensitas yang tinggi sangat mengganggu produktivitas dan proses belajar hal baru. Hindarilah semaksimal mungkin!
+
+### Definisikan  _Dynamic Variable_ Di Awal Kode
+
+Jika karena suatu hal metode sebelumnya tidak bisa diterapkan, maka opsi lainnya adalah dengan mendefinisikan semua variabel di awal dengan _keyword_ `let` ataupun `const`.
+
+//TODO contoh kode
+ 
+Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu blok kode yang khusus menjadi tempat perantara antara PHP dan Javascript. Kurang ideal, tetapi tetap lebih rapi dibanding membiarkan kode PHP bercampur dengan Javascript, berserakan di sembarang tempat.
+
+> **Idealisme vs kompromi**
+> 
 
 ## Jangan Pisahkan JS dan Pasangan HTML-nya
 
