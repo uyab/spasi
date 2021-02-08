@@ -1,103 +1,146 @@
 # View
 
-<!-- View sering dianaktirikan ketika sedang koding karena biasanya disini kita akan lebih banyak menulis _tag_ HTML dibanding  _real code_. Ketika membahas _clean code_, biasanya contoh yang disertakan selalu dalam bentuk  kode PHP. Jarang sekali dibahas tentang View. Mungkin karena View bukan "PHP", tidak ada _logic_, dan jarang dijadikan tolak ukur kemampuan seorang programmer ketika *interview*.
- -->
+**View** merupakan huruf kedua dari akronim M-V-C. Berbeda dengan Model dan Controller yang berisi kode PHP, di View kita akan lebih banyak berurusan dengan HTML dan teman-temannya. Istilah kerennya, View adalah _presentation layer_, yaitu suatu bagian yang tugasnya melakukan presentasi (menyampaikan informasi) ke pengguna aplikasi.
 
-Jika kamu baru belajar Laravel, besar kemungkinan posisimu saat ini adalah "*fullstack*" web developer. Secara sederhana, "*fullstack*" berarti kamu bisa membuat sebuah aplikasi web secara mandiri mulai dari desain basis data, melakukan query SQL, koding *logic* aplikasi di Laravel, hingga membuat tampilan dengan HTML, CSS, dan Javascript. 
+Sebuah View yang _clean_ sama pentingnya dengan Controller dan Model yang _clean_. Bahkan View harusnya lebih mendapat prioritas karena "merapikan" View jauh lebih mudah dilakukan dibanding merapikan Controller atau Model.
 
-Jika dibawa ke lingkup Laravel, berarti kamu harus mahir dalam membuat Model (interaksi dengan basisdata), View (tampilan), dan Controller (*logic* aplikasi). Setelah menguasai ketiga elemen itu, kamu bisa mendeklarasikan diri <del>sebagai avatar</del> telah menguasai MVC.
-
-Nah, karena saat ini kamu masih harus berhubungan dengan View, maka posisinya harus kita setarakan dengan yang lain. Sebuah View yang clean sama pentingnya dengan Controller dan Model yang clean. Bahkan View harusnya bisa lebih diprioritaskan karena "merapikan" View jauh lebih mudah dilakukan dibanding merapikan Controller atau Model.
-
-> View juga bagian dari kode, dia berhak mendapatkan perlakuan yang sama baiknya darimu.
+Yuk, kita buktikan!
 
 ## Memecah File
 Salah satu kemampuan yang harus dikuasai untuk menulis kode yang _friendly_ adalah keberanian untuk memecah kode atau _file_. 
 
-Di awal proyek, semua masih terlihat rapi. Kodenya masih sedikit. Seiring berjalannya waktu, ada penambahan fitur disana-sini, tambal sulam bug di kanan dan di kiri. Kode yang awalnya masih terlihat dalam satu layar sekarang harus di-_scroll_ berkali-kali untuk melihat keseluruhan isinya.
+Di awal proyek, semua masih terlihat rapi. Kodenya masih sedikit. Seiring berjalannya waktu, ada penambahan fitur disana-sini, tambal sulam _bug_ di kanan dan di kiri. Kode yang awalnya masih terlihat dalam satu layar sekarang harus di-_scroll_ berkali-kali untuk melihat keseluruhan isinya.
 
-Programmer yang baik tahu kapan harus mulai memecah file ketika jumlah barisnya sudah mulai membengkak dan berpotensi susah dikelola dikemudian hari.
+Programmer yang baik tahu kapan harus berhenti sejenak, mendeteksi bagian mana yang mulai membengkak dan berpotensi menyulitkan untuk dibaca di kemudian hari, lalu mulai memecahnya. View sengaja dijadikan topik pertama karena memecah view paling mudah dilakukan dan hampir tidak ada efek sampingnya.
+
+> Keuntungan  memecah baris kode yang besar menjadi beberapa file kecil akan semakin terasa berlipat ganda ketika kamu bekerja dalam sebuah tim yang menerapkan _version control system_ seperti Git.
 
 ## Biasakan Memakai Sub View
 
-Kita ambil contoh halaman dashboard berikut ini.
-![](../.pastes/2021-01-31-22-29-04.png)
+Bayangkan kamu mendapat tugas untuk membuat dashboard dengan mockup seperti di bawah ini.
+![](assets/img/dashboard.png)
 
-Pada umumnya, tampilan di atas akan diimplementasi menjadi file blade seperti ini:
-
-```html
-@extends('layout')
-
-@section('content')
-    
-    <h1>Statistik Laporan</h1>
-    
-    <section>
-        Filter
-        ...
-        ...
-    </section>
-    
-    <section>
-        Grafik
-        ...
-        ...
-    </section>
-    
-    <section>
-        Tabel
-        ...
-        ...
-    </section>
-    
-@endsection
-```
-Sekarang mari kita coba untuk memecahnya menjadi _sub view_. Bagaimana caranya?
-
-Secara kasat mata, kita bisa melihat ada tiga komponen utama yang menyusun halaman dashboard di atas:
-1. Filter
-2. Grafik
-3. Tabel
-
-Setelah mengetahui komponen penyusun halaman dashboard tersebut ada tiga, maka langkah berikutnya adalah membuat _**sub view**_ untuk masing-masing komponen tersebut. Setelah itu, kita cukup memanggil _**@include**_ dari view utama.
+Pada umumnya, tampilan di atas akan diimplementasi menjadi file blade seperti berikut:
 
 ```php
 @extends('layout')
 
 @section('content')
-    
     <h1>Statistik Laporan</h1>
+    <section>
+        ...
+        Summary
+        ...
+    </section>
+    <section>
+        ...
+        Chart
+        ...
+    </section>
+    <section>
+        ...
+        List
+        ...
+    </section>
+@endsection
+```
+Sekarang mari kita coba untuk memecahnya menjadi _sub view_. Bagaimana caranya?
+
+Secara kasat mata, kita bisa melihat ada tiga komponen utama yang menyusun halaman dashboard di atas, yaitu:
+1. Summary
+2. Chart
+3. List
+
+Setelah mengetahui komponen penyusun halaman dashboard tersebut, langkah berikutnya adalah membuat _**sub view**_ untuk masing-masing komponen:
+1. `_summary.blade.php`
+2. `_chart.blade.php`
+3. `_list.blade.php`
+
+Lalu, kamu cukup memanggil tiap komponen dengan **@include**:
+```php
+@extends('layout')
+
+@section('content')
+
+    <h1>Dashboard</h1>
     
-    @include('_filter')
-    @include('_grafik')
-    @include('_tabel')
+    @include('_summary')
+    @include('_chart')
+    @include('_list')
     
 @endsection
 ```
-**Sederhana dan sangat mudah dilakukan bukan?**
+Alih-alih punya satu _file_ yang berisi 100 baris kode, sekarang kamu punya 4 _file_ yang masing-masing berisi 25 baris kode. Lebih rapi dan lebih ringan ketika dibuka di _code editor_ atau IDE.
 
-> Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Maksudnya adalah ketika kita bilang ada a, b, dan c di aplikasi, maka a, b, dan c itu juga idealnya terlihat secara eksplisit di kode penyusun aplikasi, entah itu sebagai nama file, nama fungsi, atau nama Class. 
->
+> Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Maksudnya adalah ketika kita bilang ada fitur a, b, dan c di aplikasi, maka a, b, dan c itu idealnya juga terlihat secara eksplisit di kode penyusun aplikasi, entah itu sebagai nama _file_, nama fungsi, atau nama Class. 
 
 ## Penamaan Sub View
-Kamu mungkin bertanya kenapa file blade pada contoh sebelumnya diberi nama `_filter.blade.php` dan bukan `filter.blade.php` saja. Jawabannya juga sangat sederhana: file yang diawali _underscore_ menandakan bahwa file tersebut adalah sub view.
+Kamu mungkin bertanya kenapa _file_ _blade_ pada contoh sebelumnya diberi nama `_summary.blade.php` (perhatikan ada _underscore_ diawalnya) dan bukan `filter.blade.php` saja. 
 
-Dengan menambahkan _underscore_ sebagai prefix, maka kita bisa melihat dengan jelas mana kelompok file yang merupakan view utama dan mana file yang merupakan sub view.
+Dengan menambahkan _underscore_ sebagai prefiks, maka kita bisa melihat dengan jelas mana _view_ utama dan mana _sub view_. Editor yang kamu pakai secara otomatis akan mengurutkan _file_ secara alfabetis dan seolah-olah mengelompokkan _file_ menjadi dua bagian: bagian atas untuk _sub view_ dan bagian bawah untuk _view_ utama.
 
-//TODO gambar perbandingan underscore vs normal
+![](assets/img/naming-subview.png)
+
+Secara sekilas kita bisa melihat bahwa _sub view_ yang diberi prefiks lebih mudah dikenali dibanding yang tanpa prefiks. _Minimum effort, maximum effect_.
+
+> Lebih jauh lagi, kamu juga bisa membuat folder baru untuk meletakkan _sub view_. Nama yang umum dipakai biasanya **partials** atau **sub**. Kalau sudah dibuatkan folder khusus untuk menampung _sub view_, maka nama filenya tidak perlu lagi diberi prefiks "_" (_underscore_). 
+> 
+> **Ingat prinsipnya, kelompokkan yang sejenis**.
 
 ## Layout vs Konten
-Setelah paham cara memecah view agar tidak membengkak, selanjutnya kita perlu paham **kapan** dan **dimana** sebuah view harus dipecah. Terkadang <del>gambar</del> kode bisa menggantikan 1000 kata, jadi mari kita lihat contoh saja.
+Setelah paham kapan harus mulai memecah _view_ agar tidak membengkak, selanjutnya kita perlu paham **dimana** sebuah _view_ harus dipecah. Terkadang <del>gambar</del> kode bisa menggantikan 1000 kata, jadi mari kita lihat contohnya.
 
+Anggap kita sedang mengerjakan aplikasi menggunakan Bootstrap. Lalu tampilan yang ingin dibuat adalah seperti di bawah ini:
 
+![](assets/img/grid.png)
 
-//TODO: gambar layout implisit
+Jika tidak hati-hati, maka _view_ yang kamu buat akan seperti ini:
+```html
+<div class="container">
+  <div class="row">
+    @include('_weather')
+    @include('_profile-stat')
+    @include('_blog')
+    @include('_profile-full')
+    @include('_calendar')
+    @include('_searchbox')
+    @include('_expertise')
+    @include('_inbox')
+    @include('_todo')
+  </div>
+</div>
+```
+Apa yang salah dari kode di atas?
 
-//TODO: gambar layout eksplisit
+Kita kehilangan informasi tentang susunan grid.  Melihat kode seperti di atas, susah untuk membayangkan bagaimana hasil _rendering_ halaman tanpa melihat langsung di _browser_ atau melihat satu persatu isi setiap _sub view_.
 
-Dengan memindahkan tag HTML untuk layouting di view utama, kamu bisa mengganti susunan layout dengan sangat mudah. Cukup mengubah view utamanya saja. Sub view tidak perlu diubah.
+Cara yang lebih baik adalah dengan meng-**eksplisit**-kan struktur grid di _view_ utama.
 
-> :bulb: **View utama untuk mengatur layout, subview untuk merender konten**. Ketika melihat view utama, pastikan kamu bisa membayangkan bagaimana layout halamannya.
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+        @include('_weather')
+        @include('_profile-stat')
+        @include('_blog')
+    </div>
+    <div class="col-sm-4">
+        @include('_profile-full')
+        @include('_calendar')
+    </div>
+    <div class="col-sm-4">
+        @include('_searchbox')
+        @include('_expertise')
+        @include('_inbox')
+        @include('_todo')
+    </div>        
+  </div>
+</div>
+```
+
+Sekarang terlihat dengan jelas bahwa halaman di atas terbagi menjadi 3 kolom. Dengan meletakkan tag HTML untuk _layouting_ di _view_ utama, kamu bisa mengganti susunan layout dengan sangat mudah. Cukup utak-atik posisi **@include**. Sub view tidak perlu diubah.
+
+>  **_View_ utama untuk mengatur layout, _sub view_ untuk merender konten**. Ketika melihat _view_ utama, pastikan kamu bisa membayangkan bagaimana layout halamannya.
 
 
 
