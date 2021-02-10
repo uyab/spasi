@@ -20,7 +20,7 @@ Programmer yang baik tahu kapan harus berhenti sejenak, mendeteksi bagian mana y
 Bayangkan kamu mendapat tugas untuk membuat dashboard dengan mockup seperti di bawah ini.
 ![](assets/img/dashboard.png)
 
-Pada umumnya, tampilan di atas akan diimplementasi menjadi file blade seperti berikut:
+Pada umumnya, tampilan di atas akan diimplementasi menjadi satu file blade seperti berikut:
 
 ```php
 @extends('layout')
@@ -178,7 +178,7 @@ Dilihat dari kaca mata _resources_, _context switching_ itu mahal. Berpindah dar
 Jika karena suatu hal metode sebelumnya tidak bisa diterapkan, maka opsi lainnya adalah dengan mendefinisikan semua variabel di awal dengan _keyword_ `let` ataupun `const`.
 
 //TODO contoh kode
- 
+
 Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu blok kode yang khusus menjadi tempat perantara antara PHP dan Javascript. Kurang ideal, tetapi tetap lebih rapi dibanding membiarkan kode PHP bercampur dengan Javascript, berserakan di sembarang tempat.
 
 > **Idealisme vs kompromi**
@@ -216,55 +216,145 @@ Untuk memudahkan pembacaan kode, maka disarankan untuk menambahkan *identifier* 
 
 
 
-## View Composer Terlalu Magic, Hindari!
+## View Share & View Composer Terlalu Magic, Hindari!
 
-Pernahkan kamu mengalami sebuah momen dimana ketika sedang asik-asiknya _debugging_, lalu menemukan sebuah variabel, misalnya `$kategori`, tetapi tidak menemukan dari mana asal variabel tersebut. Tidak ada di Controller, tidak ada juga di View.
+Pernahkan kamu mengalami momen dimana sedang asik  _debugging_, lalu menemukan sebuah variabel, misalnya `$categories`, tetapi tidak menemukan dari mana asal variabel tersebut. Tidak ada di Controller, tidak ada juga di View.
 
-//TODO contoh kode view composer
-//TODO contoh kode controller (tidak ada passing variabelnya)
+Kode seperti itu umum dijumpai di file Blade untuk _layouting_.
+
+```html
+<!-- resources/view/layout.blade.php -->
+<html>
+    <head>
+        <title>The Boring Stack</title>
+    </head>
+    <body>
+        <header>
+            @foreach($categories as $item)
+            <a href="{{ $item->permalink }}">{{ $item->title }}</a>
+            @endoreach
+        </header>
+        {{ $slot }}
+    </body>
+</html>
+```
+
+Semua yang melihat file di atas tentu bertanya-tanya, dari mana asalnya variabel `$categories`.  Perlu beberapa saat sebelum kamu menyadari bahwa ini adalah salah satu _**magic**_  dari Laravel.
+
+### View Share & View Composers
+Jika ada variabel yang dibutuhkan di semua halaman, kamu bisa melakukannya dengan dua cara. 
+
+Pertama dengan memanfaatkan `View::share`:
+```php
+use Illuminate\Support\Facades\View;
+
+View::share('categories', Category::all());
+```
+Kedua dengan memakai View Composers:
+```php
+View::composer('layout', function ($view) {
+    $view->with('categories', Category::all());
+});
+```
+
+Keduanya sama, secara _magic_ mendaftarkan variabel baru yang bisa diakses dari semua View. Jika bukan kamu sendiri yang menulis kode-kode di atas, besar kemungkinan akan kesulitan ketika harus melacak asal muasalnya di kemudian hari.
+
+> Dokumentasi tentang **View Share** dan **View Composers** bisa dibaca di https://laravel.com/docs/master/views#view-composers.
 
 ### Apa Alternatifnya?
 
-Ada satu fitur di Laravel yang menurut saya sangat jarang dipakai, yaitu **Service Injection**.  
+Ada satu fitur di Laravel yang harusnya lebih manusiawi jika dipakai untuk mendaftarkan variabel ke View, yaitu **Service Injection**.  
 
-//TODO contoh kode implementasi $kategori dengan service injection
+Sekarang mari kita implementasikan kasus `$categories` dengan Service Injection:
+```html
+@inject('site', 'App\Services\SiteService')
 
-Dokumentasi resminya bisa dibaca di https://laravel.com/docs/master/blade#service-injection.
+<html>
+    <head>
+        <title>The Boring Stack</title>
+    </head>
+    <body>
+        <header>
+            @foreach($site->categories() as $item)
+            <a href="{{ $item->permalink }}">{{ $item->title }}</a>
+            @endoreach
+        </header>
+        {{ $slot }}
+    </body>
+</html>
+```
 
-Apa yang dituliskan secara eksplisit biasanya lebih mudah dibaca dan dipahami. Oleh sebab itu, eksplisitkanlah pemanggilan variabel global di View dengan menggunakan **Service Injection**.
+Sekarang kodenya terlihat lebih eksplisit dan natural. Ketika melihat `$site->categories()` secara otomatis kita akan mencari `$site` di file yang sedang dibuka saat ini (`layout.blade.php`).  Ketika menemukannya di baris pertama, terlihat jelas **petunjuknya** kemana `$site` ini mengarah. 
 
-Beberapa manfaat yang bisa kita dapat ketika menerapkan Service Injection antara lain:
+Tidak perlu lagi menerka-nerka, `dd()`, atau bertanya ke programmer lain. Petunjuknya sudah sangat jelas. 
+
+> Dokumentasi resmi tentang **Service Injection** bisa dibaca di https://laravel.com/docs/master/blade#service-injection.
+
+Pilihan lain yang lebih tepat adalah membuat **Blade Component** khusus untuk me-render kategori.
+```html
+<!-- resources/views/layout.blade.php -->
+<!-- Lihat betapa bersihnya kode HTML jika memakai Blade Component       -->
+<html>
+    <head>
+        <title>The Boring Stack</title>
+    </head>
+    <body>
+        <header>
+            <x-categories /> 
+        </header>
+        {{ $slot }}
+    </body>
+</html>
+```
+
+```php
+<?php
+
+// app/View/Components/Categories.php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+
+class Categories extends Component
+{
+    public function render()
+    {
+        return view('components.categories');
+    }
+}
+```
+
+Yang perlu menjadi perhatian, konvensi penamaan komponen harus konsisten dan mengikuti standard Laravel.
+
+> Dokumentasi resmi tentang **Blade Component** bisa dibaca di https://laravel.com/docs/master/blade#components.
+
+### Keuntungan
+Apa yang dituliskan secara eksplisit biasanya lebih mudah dibaca, dipahami, dan  diikuti alurnya. Oleh sebab itu, eksplisitkanlah pemanggilan variabel global di View dengan menggunakan **Service Injection** atau **Blade Component**.
+
+Beberapa manfaat yang bisa kita dapat ketika menerapkannya antara lain:
 1. Memaksa programmer membuat Class khusus untuk membungkus _logic_ mendapatkan variabel. Disini, kita sekaligus belajar menerapkan Single Responsibility Principle.
-2. Karena _logic_ ada di sebuah Class, maka menjadi lebih mudah dites, dibandingkan jika logic tersebut ada di Service Provider. Btw, pernah melakukan unit test terhadapt Service Provider di Laravel?
+2. Karena _logic_ ada di sebuah Class, maka menjadi lebih mudah dites, dibandingkan jika logic tersebut ada di Service Provider.
 
-//TODO gambar struktur folder ServiceInjection
-
+> **_Single Responsibility Principle (SRP)_** adalah salah satu kaidah menulis _clean code_ dimana sebuah Class harus fokus dengan satu tugas khusus, tidak boleh terlalu kompleks atau multi fungsi. **S**RP merupakan huruf pertama **(S)** dari akronim **SOLID** yang sangat tersohor itu.
 
 ### Boleh, Asalkan...
 
 #### 1. Didokumentasikan Secara Eksplisit
 Biasakan mengomentasi bagian kode yang "_magic_" untuk membantu programmer lain (atau dirimu sendiri, 3 bulan kemudian) ketika membacanya:
 
-```php
-//layout.blade.php
+```html
+<!-- layout.blade.php -->
 
-//@kategori berasal dari ViewComposerServiceProvider
+<!-- @kategori berasal dari ViewComposerServiceProvider -->
 @foreach($kategori as $item)
 ...
 @endforeach
 ```
 
-> **Bukankah manusia tempatnya lupa?**
+> Ikatlah ilmu (_knowledge_) dengan mencatatnya, termasuk dengan menulis komentar yang tepat. **Bukankah manusia tempatnya lupa?**
 
 #### 2. Sudah Ada Konvensi
-Sudah ada kesepakatan antar anggota tim yang diambil sebelumnya, bahwa semua variabel global yang ditemukan di  View pasti berasal dari `ViewComposerServiceProvider`. Tapi ingat, konvensi tanpa dokumentasi juga rawan dilupakan. Oleh sebab itu, tulislah semua konvensi di `readme.md`.
+Sudah ada kesepakatan antar anggota tim yang diambil sebelumnya, bahwa semua variabel global yang ditemukan di  View pasti berasal dari `ViewServiceProvider`. Tapi ingat, konvensi tanpa dokumentasi juga rawan dilupakan. Oleh sebab itu, tulislah semua konvensi di `readme.md`.
 
-> Silakan googling dengan kata kunci "_readme driven development_".
-
-#### 3. Buat Service Provider Terpisah
-View Composer biasanya diletakkan di `AppServiceProvider`, sesuai contoh di dokumentasi resmi Laravel. Seiring berjalannya waktu, biasanya AppServiceProvider ini menjadi _**God Object**_ dan kodenya membengkak. Oleh sebab itu, buat dan daftarkanlah Service Provider baru, misalnya `ViewComposerServiceProvider`, khusus untuk mendaftarkan variabel global ke View.
-
-<hr>
-
-> Apa yang ditulis dengan cepat, apalagi tidak ditulis sama sekali (implisit), biasanya hanya bisa dibaca dengan lambat (ehem, resep dokter).
-> Sebaliknya, apa yang eksplisit (lebih butuh waktu untuk ditulis) biasanya lebih cepat dibaca. Untuk kasus ini eksplisit > implisit.
+> File _readme.md_ harusnya bisa menjadi sumber utama _knowledge_ terkait _source code_ aplikasi. Oleh sebab itu, rajin-rajinlah mencatat di `readme.md`, atau istilah kerennya "_readme driven development_".
