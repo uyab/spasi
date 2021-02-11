@@ -1,11 +1,87 @@
 <header>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/github.min.css">
+    <style>
+        .hljs {
+            display: block;
+            overflow-x: auto;
+            padding: 0.5em;
+            background: #fff;
+            color: black
+        }
+
+        .xml .hljs-meta {
+            color: #c0c0c0
+        }
+
+        .hljs-comment, .hljs-quote {
+            color: #007400
+        }
+
+        .hljs-tag, .hljs-attribute, .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-name {
+            color: #5c2699
+        }
+
+        .hljs-variable, .hljs-template-variable {
+            color: #3F6E74
+        }
+
+        .hljs-code, .hljs-string, .hljs-meta-string {
+            color: #678
+        }
+
+        .hljs-regexp, .hljs-link {
+            color: #5c2699
+        }
+
+        .hljs-title, .hljs-symbol, .hljs-bullet, .hljs-number {
+            color: #1c00cf
+        }
+
+        .hljs-section, .hljs-meta {
+            color: #643820
+        }
+
+        .hljs-class .hljs-title, .hljs-type, .hljs-built_in, .hljs-builtin-name, .hljs-params {
+            color: #5c2699
+        }
+
+        .hljs-attr {
+            color: #8751AA
+        }
+
+        .hljs-subst {
+            color: #000
+        }
+
+        .hljs-formula {
+            background-color: #eee;
+            font-style: italic
+        }
+
+        .hljs-addition {
+            background-color: #baeeba
+        }
+
+        .hljs-deletion {
+            background-color: #ffc8bd
+        }
+
+        .hljs-selector-id, .hljs-selector-class {
+            color: #9b703f
+        }
+
+        .hljs-doctag, .hljs-strong {
+            font-weight: bold
+        }
+
+        .hljs-emphasis {
+            font-style: italic
+        }
+    </style>
     <style>
         body {
             font-family: body;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.8;
             color: #252525;
         }
 
@@ -23,15 +99,14 @@
         h2 {
             font-family: heading2;
             text-align: left;
-            font-size: 38px;
+            font-size: 32px;
+            line-height: 42px;
             padding-top: 0;
             padding-bottom: 30px;
-            font-weight: bold;
         }
 
         h3 {
             font-family: heading3;
-            font-weight: bold;
             text-align: left;
             font-size: 20px;
             padding-top: 40px;
@@ -39,8 +114,8 @@
         }
 
         h4 {
-            font-family: monospace;
-            font-weight: bold;
+            font-size: 16px;
+            font-family: heading4;
             padding-top: 20px;
         }
 
@@ -68,11 +143,12 @@
             font-size: .8em;
             color: #2d2d2d;
             font-family: monospace;
+            line-height: 18px;
         }
 
         code {
             font-size: .9em;
-            color: #6b46c1;
+            color: #8751AA;
         }
 
         .mpdf_toc {
@@ -118,10 +194,10 @@
         }
 
         #toc-title {
-            font-weight: bold;
             font-size: 45px;
-            padding-top: 0;
-            padding-bottom: 10px;
+            letter-spacing: 1px;
+            padding-top: 50px;
+            padding-bottom: 50px;
             text-align: center;
         }
 

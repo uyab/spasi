@@ -144,45 +144,127 @@ Sekarang terlihat dengan jelas bahwa halaman di atas terbagi menjadi 3 kolom. De
 
 
 
-## Tidak Mencampur PHP dan JS
-Pemakaian editor atau IDE sudah menjadi hal yang wajar bagi programmer saat ini. Setiap keyword, setiap bahasa pemrograman bisa kamu atur _syxtax higlighting_-nya untuk memudahkan mengenali kode.
+## Tidak Menyisipkan Blade Ke Dalam Javascript
+Mengembangkan aplikasi web tidak bisa lepas dari Javascript. Begitu juga dengan aplikasi Laravel yang dikembangkan secara _fullstack_.
 
-//TODO gambar syntax higlighting bisa mengenali error
+```html
+<section>
+    <button id="buttonSubmitComment">Kirim Komentar</button>
+</section>
 
-Mencampur kode PHP dan Javascript (berlaku juga untuk bahasa lain) akan mengurangi readability (seberapa mudah kode dibaca/dipahami) dan kemampuan editor/IDE untuk menganalisis kode.
+<script>
+$('#buttonSubmitComment').on('click', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+        url: {{ route('comment.store') }},
+        type: "POST",
+        dataType: 'json',
+    })
+});
+<script>
+```
 
-//TODO gambar contoh kode blade + JS campur
+_Mengoplos_ kode PHP dan Javascript seperti contoh di atas setidaknya memiliki dua kekurangan:
+1. Membaca 2 _syntax_ dari 2 bahasa yang berbeda dalam satu blok kode yang sama akan sedikit merepotkan otak (_context switching_) dan berpotensi menimbulkan kesalahan dasar ketika menulisnya. 
 
-Ketika kebutuhan aplikasi mengharuskan adanya "interaksi" antara kode Blade(PHP) dan Javascript, misalnya variable Javascript yang berasal dari variable PHP, ada dua cara yang bisa dilakukan:
+    ```javascript 
+     url: {{ route('comment.store') }},
+    ```
+    Berapa detik yang kamu butuhkan untuk menyadari bahwa potongan kode di atas salah secara sintaksis?
+    
+1. Jika suatu ketika kamu ingin memindahkan semua  _script_ dari file Blade ke satu file `js`, maka tidak bisa dilakukan secara langsung karena fungsi `route()` tidak akan dikenali di file `js`. Harus di-_refactor_ dulu.
+
+Ketika kebutuhan aplikasi mengharuskan adanya interaksi antara kode Blade(PHP) dan Javascript,  ada dua cara yang bisa dilakukan agar hubungan tersebut bisa langgeng dalam jangka panjang (mudah di-_maintain_):
 1. Passing sebagai data-attribute
 2. Definisikan _dynamic variable_ di awal kode
 
-### Passing Variable Sebagai `data-attribute`
 
-// TODO contoh kode
+> Sekedar mengingatkan, kode `url: {{ route('comment.store') }}` di atas salah karena kurang tanda petik. Kode yang benar seharusnya `url: "{{ route('comment.store') }}"`
 
-Dengan metode penulisan seperti di atas, kita bisa meminimalisir adanya _**kode oplosan**_, yaitu suatu kondisi bercampurnya 2 bahasa dalam **satu baris kode**.
+
+### Passing Variable Sebagai Atribut HTML data-*
+
+Alih-alih mencampur Blade dan Javascript, kamu bisa memanfaatkan atribut HTML `data-*` untuk mem-_passing_ sebuah value yang berasar dari PHP agar bisa dibaca oleh Javascript.
+
+```html
+<section>
+    <button id="buttonSubmitComment" data-url="{{ route('comment.store') }}">Kirim Komentar</button>
+</section>
+
+<!-- End of Blade here -->
+<!-- Dari baris ini ke bawah khusus Javascript -->
+
+<script>
+$('#buttonSubmitComment').on('click', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+        url: $(this).data('url'),
+        type: "POST",
+        dataType: 'json',
+    })
+});
+<script>
+```
+Atribut `data-*` merupakan atribut HTML5 yang valid digunakan untuk semua elemen. Artinya kamu bisa menambahkan `data-*` ke `<form>`, `<button>`, `<table>`, dan semua tag HTML lain.
+
+Cara mengaksesnya juga sangat mudah. 
+```javascript
+// Dengan Javascript native
+document.querySelector('#buttonSubmitComment').dataset.url;
+
+// Dengan jQuery
+$('#buttonSubmitComment').data('url');
+```
+
+Dengan metode penulisan seperti di atas, kamu telah berhasil menjauhkan diri dari _**kode oplosan**_, yaitu suatu kondisi bercampurnya 2 bahasa dalam **satu blok kode**.
+
+#### Sekilas Tentang _Context Switching_
+
+_**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain. 
 
 Dilihat dari kaca mata _resources_, _context switching_ itu mahal. Berpindah dari mode PHP ke mode Javascript juga sama. Oleh sebab itu penting bagi kita untuk bisa mengelompokkan masing-masing kode ke dalam "blok"-nya masing-masing.
 
-> _**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain. 
-> <br>
-> <br>
-> Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian kamu pegang _hape_, buka notififikasi, membalas komentar, lalu kembali melanjutkan membaca buku. Ada sekian detik waktu tambahan yang dibutuhkan otak kita untuk kembali fokus ke aktivitas membaca buku.
-> <br>
-> <br> 
-> _**Context switching**_ dalam waktu yang singkat dengan intensitas yang tinggi sangat mengganggu produktivitas dan proses belajar hal baru. Hindarilah semaksimal mungkin!
+Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian kamu pegang _hape_, buka notififikasi, membalas komentar, lalu kembali melanjutkan membaca buku. Ada sekian detik waktu tambahan yang dibutuhkan otak kita untuk kembali fokus ke aktivitas membaca buku.
+
+> _**Context switching**_ dalam waktu yang singkat dengan intensitas yang tinggi sangat mengganggu produktivitas dan dan tidak baik untuk kesehatan mental. Hindarilah semaksimal mungkin!
+> 
+> Referensi: https://blog.rescuetime.com/context-switching/
 
 ### Definisikan  _Dynamic Variable_ Di Awal Kode
 
 Jika karena suatu hal metode sebelumnya tidak bisa diterapkan, maka opsi lainnya adalah dengan mendefinisikan semua variabel di awal dengan _keyword_ `let` ataupun `const`.
 
-//TODO contoh kode
+```html
+<section>
+    <button id="buttonSubmitComment">Kirim Komentar</button>
+</section>
 
-Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu blok kode yang khusus menjadi tempat perantara antara PHP dan Javascript. Kurang ideal, tetapi tetap lebih rapi dibanding membiarkan kode PHP bercampur dengan Javascript, berserakan di sembarang tempat.
 
-> **Idealisme vs kompromi**
-> 
+<script>
+
+<!-- Area transisi, serah terima antara Blade dan Javascript -->
+const URL = '{{ route('comment.store') }}';
+const sampleData = @json($dataFromController);
+
+<!-- Setelah ini full Javascript, tidak ada lagi oplosan -->
+$('#buttonSubmitComment').on('click', function(e) {
+    e.preventDefault();
+    
+    $.ajax({
+        url: URL,
+        type: "POST",
+        dataType: 'json',
+    })
+});
+<script>
+```
+
+Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu blok kode yang khusus menjadi tempat perantara antara PHP dan Javascript. Kurang ideal, tetapi tetap lebih rapi dibanding membiarkan kode PHP bercampur dengan Javascript, berserakan di setiap baris.
+
+
+> _Fullstack application_ merujuk ke aplikasi yang _backend_ dan _frontend_ tergabung dalam satu _codebase_. Alternatifnya, _backend_ memiliki _codebase_ sendiri (misalnya memakai Java) dan _frontend_ memiliki _codebase_ sendiri (misalnya memakai Vue.js).
 
 ## Jangan Pisahkan JS dan Pasangan HTML-nya
 

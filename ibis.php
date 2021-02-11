@@ -15,11 +15,11 @@ return [
      * The list of fonts to be used in the different themes.
      */
     'fonts' => [
-        'heading1' => 'UnicaOne-Regular.ttf',
-        'heading2' => 'FjallaOne-Regular.ttf',
-        'heading3' => 'FjallaOne-Regular.ttf',
-        'heading4' => 'Inter.ttf',
-        'body' => 'WorkSans.ttf',
+        'heading1' => 'Inter-SemiBold.ttf',
+        'heading2' => 'Inter-SemiBold.ttf',
+        'heading3' => 'Inter-Bold.ttf',
+        'heading4' => 'Inter-Bold.ttf',
+        'body' => 'Inter.ttf',
         // 'body' => 'NotoSerif-Regular.ttf',
         // 'body' => 'Literata.ttf',
         // 'monospace' => 'FiraCode.ttf',
