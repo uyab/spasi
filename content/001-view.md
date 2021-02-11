@@ -268,11 +268,11 @@ Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu b
 
 ## Jangan Pisahkan JS dan Pasangan HTML-nya
 
-Kasus yang sering ditemui ketika koding di View adalah menambahkan Javascript untuk membuat halaman yang lebih interaktif. 
+>{quote} Javascript dan HTML ibarat sepasang penganti baru, susah dipisahkan, inginnya berdekatan terus. Itu sudah sifat alamiah mereka.
 
-Contoh pertama, menggunakan halaman dashboard sebelumnya, ternyata perlu ada tambahan tombol "Export Excel" di bagian Tabel.
+Di bagian sebelumnya, kita sudah mengenal cara memecah satu file View yang besar menjadi beberapa _sub view_ yang kecil. Nah, kamu harus berhati-hati ketika melakukan pemecahan tersebut. Pastikan JS dan HTML yang saling berhubungan tetap berada dalam satu file yang sama.
 
-
+Contoh pertama, subfirm form pakai Ajax.
 
 Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini: 
 
