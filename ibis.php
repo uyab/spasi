@@ -15,8 +15,8 @@ return [
      * The list of fonts to be used in the different themes.
      */
     'fonts' => [
-        'heading1' => 'Inter-SemiBold.ttf',
-        'heading2' => 'Inter-SemiBold.ttf',
+        'heading1' => 'AmaticSC-Regular.ttf',
+        'heading2' => 'AmaticSC-Regular.ttf',
         'heading3' => 'Inter-Bold.ttf',
         'heading4' => 'Inter-Bold.ttf',
         'body' => 'Inter.ttf',

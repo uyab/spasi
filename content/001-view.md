@@ -7,7 +7,7 @@ Sebuah View yang _clean_ sama pentingnya dengan Controller dan Model yang _clean
 Yuk, kita buktikan!
 
 ## Memecah File
-Salah satu kemampuan yang harus dikuasai untuk menulis kode yang _friendly_ adalah keberanian untuk memecah kode atau _file_. 
+Salah satu kemampuan yang harus dikuasai untuk menulis kode yang _friendly_ adalah keberanian untuk memecah kode atau _file_.
 
 Di awal proyek, semua masih terlihat rapi. Kodenya masih sedikit. Seiring berjalannya waktu, ada penambahan fitur disana-sini, tambal sulam _bug_ di kanan dan di kiri. Kode yang awalnya masih terlihat dalam satu layar sekarang harus di-_scroll_ berkali-kali untuk melihat keseluruhan isinya.
 
@@ -72,10 +72,10 @@ Lalu, kamu cukup memanggil tiap komponen dengan **@include**:
 ```
 Alih-alih punya satu _file_ yang berisi 100 baris kode, sekarang kamu punya 4 _file_ yang masing-masing berisi 25 baris kode. Lebih rapi dan lebih ringan ketika dibuka di _code editor_ atau IDE.
 
-> Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Maksudnya adalah ketika kita bilang ada fitur a, b, dan c di aplikasi, maka a, b, dan c itu idealnya juga terlihat secara eksplisit di kode penyusun aplikasi, entah itu sebagai nama _file_, nama fungsi, atau nama Class. 
+> Kode yang baik adalah kode yang mencerminkan kebutuhan fungsional aplikasinya. Maksudnya adalah ketika kita bilang ada fitur a, b, dan c di aplikasi, maka a, b, dan c itu idealnya juga terlihat secara eksplisit di kode penyusun aplikasi, entah itu sebagai nama _file_, nama fungsi, atau nama Class.
 
 ## Penamaan Sub View
-Kamu mungkin bertanya kenapa _file_ _blade_ pada contoh sebelumnya diberi nama `_summary.blade.php` (perhatikan ada _underscore_ diawalnya) dan bukan `filter.blade.php` saja. 
+Kamu mungkin bertanya kenapa _file_ _blade_ pada contoh sebelumnya diberi nama `_summary.blade.php` (perhatikan ada _underscore_ diawalnya) dan bukan `filter.blade.php` saja.
 
 Dengan menambahkan _underscore_ sebagai prefiks, maka kita bisa melihat dengan jelas mana _view_ utama dan mana _sub view_. Editor yang kamu pakai secara otomatis akan mengurutkan _file_ secara alfabetis dan seolah-olah mengelompokkan _file_ menjadi dua bagian: bagian atas untuk _sub view_ dan bagian bawah untuk _view_ utama.
 
@@ -83,8 +83,8 @@ Dengan menambahkan _underscore_ sebagai prefiks, maka kita bisa melihat dengan j
 
 Secara sekilas kita bisa melihat bahwa _sub view_ yang diberi prefiks lebih mudah dikenali dibanding yang tanpa prefiks. _Minimum effort, maximum effect_.
 
-> Lebih jauh lagi, kamu juga bisa membuat folder baru untuk meletakkan _sub view_. Nama yang umum dipakai biasanya **partials** atau **sub**. Kalau sudah dibuatkan folder khusus untuk menampung _sub view_, maka nama filenya tidak perlu lagi diberi prefiks "_" (_underscore_). 
-> 
+> Lebih jauh lagi, kamu juga bisa membuat folder baru untuk meletakkan _sub view_. Nama yang umum dipakai biasanya **partials** atau **sub**. Kalau sudah dibuatkan folder khusus untuk menampung _sub view_, maka nama filenya tidak perlu lagi diberi prefiks "_" (_underscore_).
+>
 > **Ingat prinsipnya, kelompokkan yang sejenis**.
 
 ## Layout vs Konten
@@ -166,13 +166,13 @@ $('#buttonSubmitComment').on('click', function(e) {
 ```
 
 _Mengoplos_ kode PHP dan Javascript seperti contoh di atas setidaknya memiliki dua kekurangan:
-1. Membaca 2 _syntax_ dari 2 bahasa yang berbeda dalam satu blok kode yang sama akan sedikit merepotkan otak (_context switching_) dan berpotensi menimbulkan kesalahan dasar ketika menulisnya. 
+1. Membaca 2 _syntax_ dari 2 bahasa yang berbeda dalam satu blok kode yang sama akan sedikit merepotkan otak (_context switching_) dan berpotensi menimbulkan kesalahan dasar ketika menulisnya.
 
-    ```javascript 
+    ```javascript
      url: {{ route('comment.store') }},
     ```
     Berapa detik yang kamu butuhkan untuk menyadari bahwa potongan kode di atas salah secara sintaksis?
-    
+
 1. Jika suatu ketika kamu ingin memindahkan semua  _script_ dari file Blade ke satu file `js`, maka tidak bisa dilakukan secara langsung karena fungsi `route()` tidak akan dikenali di file `js`. Harus di-_refactor_ dulu.
 
 Ketika kebutuhan aplikasi mengharuskan adanya interaksi antara kode Blade(PHP) dan Javascript,  ada dua cara yang bisa dilakukan agar hubungan tersebut bisa langgeng dalam jangka panjang (mudah di-_maintain_):
@@ -209,7 +209,7 @@ $('#buttonSubmitComment').on('click', function(e) {
 ```
 Atribut `data-*` merupakan atribut HTML5 yang valid digunakan untuk semua elemen. Artinya kamu bisa menambahkan `data-*` ke `<form>`, `<button>`, `<table>`, dan semua tag HTML lain.
 
-Cara mengaksesnya juga sangat mudah. 
+Cara mengaksesnya juga sangat mudah.
 ```javascript
 // Dengan Javascript native
 document.querySelector('#buttonSubmitComment').dataset.url;
@@ -222,14 +222,14 @@ Dengan metode penulisan seperti di atas, kamu telah berhasil menjauhkan diri dar
 
 #### Sekilas Tentang _Context Switching_
 
-_**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain. 
+_**Context switching**_ adalah sebuah kondisi ketika kita harus berpindah dari satu aktivitas ke aktivitas lain.
 
 Dilihat dari kaca mata _resources_, _context switching_ itu mahal. Berpindah dari mode PHP ke mode Javascript juga sama. Oleh sebab itu penting bagi kita untuk bisa mengelompokkan masing-masing kode ke dalam "blok"-nya masing-masing.
 
 Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian kamu pegang _hape_, buka notififikasi, membalas komentar, lalu kembali melanjutkan membaca buku. Ada sekian detik waktu tambahan yang dibutuhkan otak kita untuk kembali fokus ke aktivitas membaca buku.
 
 > _**Context switching**_ dalam waktu yang singkat dengan intensitas yang tinggi sangat mengganggu produktivitas dan dan tidak baik untuk kesehatan mental. Hindarilah semaksimal mungkin!
-> 
+>
 > Referensi: https://blog.rescuetime.com/context-switching/
 
 ### Definisikan  _Dynamic Variable_ Di Awal Kode
@@ -272,12 +272,12 @@ Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu b
 
 Di bagian sebelumnya, kita sudah mengenal cara memecah satu file View yang besar menjadi beberapa _sub view_ yang kecil. Nah, kamu harus berhati-hati ketika melakukan pemecahan tersebut. Pastikan JS dan HTML yang saling berhubungan tetap berada dalam satu file yang sama.
 
-Contoh, 
+Contoh,
 ```html
 
 ```
 
-Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini: 
+Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini:
 
 1. Tambahkan event onclick di tombol "Tampilkan"
 2. Request ke server via Ajax
@@ -295,7 +295,7 @@ Untuk memudahkan pembacaan kode, maka disarankan untuk menambahkan *identifier* 
 > :bulb: Ada dua prinsip penting yang harus dibiasakan untuk bisa menulis kode yang rapi:
 >
 > 1. **Memecah** yang besar menjadi beberapa bagian kecil.
-> 2. **Dekatkan** yang saling membutuhkan. 
+> 2. **Dekatkan** yang saling membutuhkan.
 >
 > Resapi, pahami, praktekkan, dan biasakan. Prinsip diatas berlaku di semua bahasa pemrograman dan framework.
 
@@ -327,7 +327,7 @@ Kode seperti itu umum dijumpai di file Blade untuk _layouting_.
 Semua yang melihat file di atas tentu bertanya-tanya, dari mana asalnya variabel `$categories`.  Perlu beberapa saat sebelum kamu menyadari bahwa ini adalah salah satu _**magic**_  dari Laravel.
 
 ### View Share & View Composers
-Jika ada variabel yang dibutuhkan di semua halaman, kamu bisa melakukannya dengan dua cara. 
+Jika ada variabel yang dibutuhkan di semua halaman, kamu bisa melakukannya dengan dua cara.
 
 Pertama dengan memanfaatkan `View::share`:
 ```php
@@ -348,7 +348,7 @@ Keduanya sama, secara _magic_ mendaftarkan variabel baru yang bisa diakses dari 
 
 ### Apa Alternatifnya?
 
-Ada satu fitur di Laravel yang harusnya lebih manusiawi jika dipakai untuk mendaftarkan variabel ke View, yaitu **Service Injection**.  
+Ada satu fitur di Laravel yang harusnya lebih manusiawi jika dipakai untuk mendaftarkan variabel ke View, yaitu **Service Injection**.
 
 Sekarang mari kita implementasikan kasus `$categories` dengan Service Injection:
 ```html
@@ -369,9 +369,9 @@ Sekarang mari kita implementasikan kasus `$categories` dengan Service Injection:
 </html>
 ```
 
-Sekarang kodenya terlihat lebih eksplisit dan natural. Ketika melihat `$site->categories()` secara otomatis kita akan mencari `$site` di file yang sedang dibuka saat ini (`layout.blade.php`).  Ketika menemukannya di baris pertama, terlihat jelas **petunjuknya** kemana `$site` ini mengarah. 
+Sekarang kodenya terlihat lebih eksplisit dan natural. Ketika melihat `$site->categories()` secara otomatis kita akan mencari `$site` di file yang sedang dibuka saat ini (`layout.blade.php`).  Ketika menemukannya di baris pertama, terlihat jelas **petunjuknya** kemana `$site` ini mengarah.
 
-Tidak perlu lagi menerka-nerka, `dd()`, atau bertanya ke programmer lain. Petunjuknya sudah sangat jelas. 
+Tidak perlu lagi menerka-nerka, `dd()`, atau bertanya ke programmer lain. Petunjuknya sudah sangat jelas.
 
 > Dokumentasi resmi tentang **Service Injection** bisa dibaca di https://laravel.com/docs/master/blade#service-injection.
 
