@@ -226,6 +226,8 @@
             color: #222222;
             font-style: italic;
             font-family: quote;
+            font-size: 1.25em;
+            text-align: center;
         }
 
         blockquote.notice {
@@ -255,25 +257,31 @@
         }
 
         table {
-            border-collapse: collapse;
+            border-radius: 8px;
             width: 100%;
+            margin-bottom: 20px;
+            border-top: 1px solid #5e3e9b;
+            border-bottom: 1px solid #5e3e9b;
         }
 
         td, th {
-            border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px 15px;
+            font-size: .8em;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f8f8f8f;
         }
 
         th {
             padding-top: 12px;
             padding-bottom: 12px;
-            text-align: left;
-            background-color: #525252;
-            color: white;
+            color: #5e3e9b;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        td:last-child {
+            /*border-bottom: 1px solid #5e3e9b;*/
         }
 
         del {

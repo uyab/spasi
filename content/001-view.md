@@ -272,7 +272,10 @@ Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu b
 
 Di bagian sebelumnya, kita sudah mengenal cara memecah satu file View yang besar menjadi beberapa _sub view_ yang kecil. Nah, kamu harus berhati-hati ketika melakukan pemecahan tersebut. Pastikan JS dan HTML yang saling berhubungan tetap berada dalam satu file yang sama.
 
-Contoh pertama, subfirm form pakai Ajax.
+Contoh, 
+```html
+
+```
 
 Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini: 
 
@@ -440,3 +443,26 @@ Biasakan mengomentasi bagian kode yang "_magic_" untuk membantu programmer lain 
 Sudah ada kesepakatan antar anggota tim yang diambil sebelumnya, bahwa semua variabel global yang ditemukan di  View pasti berasal dari `ViewServiceProvider`. Tapi ingat, konvensi tanpa dokumentasi juga rawan dilupakan. Oleh sebab itu, tulislah semua konvensi di `readme.md`.
 
 > File _readme.md_ harusnya bisa menjadi sumber utama _knowledge_ terkait _source code_ aplikasi. Oleh sebab itu, rajin-rajinlah mencatat di `readme.md`, atau istilah kerennya "_readme driven development_".
+
+## Sub View vs Blade Component
+Semua cara yang telah disebutkan sebelumnya merupakan cara singkat dan praktis untuk menjaga agar tidak ada penumpukan kode di satu _file_. Level selanjutnya, kamu bisa membuat sub view tersebut _reusable_, bisa digunakan di tempat lain, oleh programmer lain, dengan mudah. Caranya adalah dengan memanfaatkan **Blade Component**.
+
+Secara singkat, perbedaan Sub View dan Blade Component bisa dilihat dalam tabel berikut:
+
+
+| Sub View                                                                                                     |Blade Component                                                    |
+| -------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------ |
+| Mudah diterapkan karena hanya berurusan dengan file Blade                                                    |Sedikit lebih kompleks, karena harus membuat class PHP             |
+| Tidak perlu memikirkan _abstraction_                                                                         |Merupakan salah satu bentuk penerapan _abstraction_                |
+| Ketika membuat sub view, kita tidak perlu berpikir _reusable_                                                |Didesain untuk _reusable_ , bisa dipakai di view lain dengan mudah |
+| Analoginya seperti _protected method_ , hanya digunakan untuk _scope_ tertentu                               |Seperti _public method_ , penerapannya lebih luas dan generik      |
+| Tidak perlu memikirkan passing parameter karena sub view otomatis bisa mengenali variable dari _parent-view_- |Perlu meng-handle parameter                                        |
+
+Terkadang, pilihannya bukan mana yang benar atau salah, tapi **mana yang lebih cocok** dengan kondisi tim.
+
+Dalam dokumentasi resmi Laravel terkait Blade Component, https://laravel.com/docs/master/blade#components,  disebutkan: " _Components and slots provide similar benefits to sections, layouts, and includes; however, some may find the **mental model** of components and slots easier to understand_".
+
+
+Kata kuncinya adalah **mental model**. Bagaimana kita mau memodelkan aplikasi. Bagaimana kita menerjemahkan kebutuhan bisnis menjadi struktur kode yang _long lasting_ dan tetap mudah di-_maintain_, tiga bulan lagi, 6 bulan lagi, bahkan bertahun-tahun dari sekarang.
+
+>{quote} Good programmer write code for compiler, great programmer write code for human.
