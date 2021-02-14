@@ -39,7 +39,7 @@ Pada umumnya, tampilan di atas akan diimplementasi menjadi satu file blade seper
     </section>
     <section>
         ...
-        List
+        List of popular post
         ...
     </section>
 @endsection
@@ -47,14 +47,14 @@ Pada umumnya, tampilan di atas akan diimplementasi menjadi satu file blade seper
 Sekarang mari kita coba untuk memecahnya menjadi _sub view_. Bagaimana caranya?
 
 Secara kasat mata, kita bisa melihat ada tiga komponen utama yang menyusun halaman dashboard di atas, yaitu:
-1. Summary
-2. Chart
-3. List
+1. _Summary_
+2. _Chart_
+3. _List of popular post_
 
 Setelah mengetahui komponen penyusun halaman dashboard tersebut, langkah berikutnya adalah membuat _**sub view**_ untuk masing-masing komponen:
 1. `_summary.blade.php`
 2. `_chart.blade.php`
-3. `_list.blade.php`
+3. `_popularPost.blade.php`
 
 Lalu, kamu cukup memanggil tiap komponen dengan **@include**:
 ```php
@@ -66,7 +66,7 @@ Lalu, kamu cukup memanggil tiap komponen dengan **@include**:
     
     @include('_summary')
     @include('_chart')
-    @include('_list')
+    @include('_popularPost')
     
 @endsection
 ```
@@ -83,9 +83,9 @@ Dengan menambahkan _underscore_ sebagai prefiks, maka kita bisa melihat dengan j
 
 Secara sekilas kita bisa melihat bahwa _sub view_ yang diberi prefiks lebih mudah dikenali dibanding yang tanpa prefiks. _Minimum effort, maximum effect_.
 
-> Lebih jauh lagi, kamu juga bisa membuat folder baru untuk meletakkan _sub view_. Nama yang umum dipakai biasanya **partials** atau **sub**. Kalau sudah dibuatkan folder khusus untuk menampung _sub view_, maka nama filenya tidak perlu lagi diberi prefiks "_" (_underscore_).
->
-> **Ingat prinsipnya, kelompokkan yang sejenis**.
+Lebih jauh lagi, kamu juga bisa membuat folder baru untuk meletakkan _sub view_. Nama yang umum dipakai biasanya **partials** atau **sub**. Kalau sudah dibuatkan folder khusus untuk menampung _sub view_, maka nama filenya tidak perlu lagi diberi prefiks "_" (_underscore_).
+
+> Ingat prinsipnya, **kelompokkan yang sejenis**.
 
 ## Layout vs Konten
 Setelah paham kapan harus mulai memecah _view_ agar tidak membengkak, selanjutnya kita perlu paham **dimana** sebuah _view_ harus dipecah. Terkadang <del>gambar</del> kode bisa menggantikan 1000 kata, jadi mari kita lihat contohnya.
@@ -185,7 +185,7 @@ Ketika kebutuhan aplikasi mengharuskan adanya interaksi antara kode Blade(PHP) d
 
 ### Passing Variable Sebagai Atribut HTML data-*
 
-Alih-alih mencampur Blade dan Javascript, kamu bisa memanfaatkan atribut HTML `data-*` untuk mem-_passing_ sebuah value yang berasar dari PHP agar bisa dibaca oleh Javascript.
+Alih-alih mencampur Blade dan Javascript, kamu bisa memanfaatkan atribut HTML `data-*` untuk mem-_passing_ sebuah value yang berasal dari PHP agar bisa dibaca oleh Javascript.
 
 ```html
 <section>
@@ -268,37 +268,178 @@ Sekali lagi, kata kuncinya adalah **pengelompokkan**. Sekarang kita punya satu b
 
 ## Jangan Pisahkan JS dan Pasangan HTML-nya
 
->{quote} Javascript dan HTML ibarat sepasang penganti baru, susah dipisahkan, inginnya berdekatan terus. Itu sudah sifat alamiah mereka.
-
 Di bagian sebelumnya, kita sudah mengenal cara memecah satu file View yang besar menjadi beberapa _sub view_ yang kecil. Nah, kamu harus berhati-hati ketika melakukan pemecahan tersebut. Pastikan JS dan HTML yang saling berhubungan tetap berada dalam satu file yang sama.
 
-Contoh,
+Mari kita lihat kembali contoh mockup dashboard sebelumnya:
+
+![](assets/img/dashboard.png)
+
+Sekarang ada kebutuhan, setiap kali Popular Post diklik akan muncul modal yang berisi statistik sesuai judul yang dipilih.
+
+Kode yang ditulis biasanya seperti di bawah ini:
+
 ```html
+@extends('layout')
+
+@section('content')
+
+    <h1>Dashboard</h1>
+    
+    @include('_summary')
+    @include('_chart')
+    @include('_popularPost')
+    
+@endsection
+
+@push('script')
+    <script>
+        $('#listItem .item').on('click', function() {
+          //show modal
+        });
+    </script>
+@endpush
+```
+Tidak ada masalah buat yang menulis kode. Tapi akan menimbulkan pertanyaan bagi yang membacanya. Ada di mana tag HTML yang mempunyai id `#listItem` ? 
+
+Ingat, ketika programmer melakukan _debugging_ asal sebuah variabel, urutan yang dilakukan biasanya:
+1. Mencari di blok kode atau fungsi yang sama (apa yang ada di dalam blok `<script>`).
+2. Mencari dalam file yang sama (`dashboard.blade.php`).
+3. Mencari dalam folder yang sama (`resources/views`).
+4. Menyerah, mari cari di semua folder dengan fitur "Find" bawaan editor.
+
+Mungkin bukan masalah besar. Pada akhirnya akan ketemu juga. Tapi akan sedikit mengurangi _happiness index_ ketika koding.
+
+Lalu bagaimana solusi yang lebih manusiawi?
+
+### 1. Dekatkan Yang Saling Membutuhkan
+
+Untuk setiap sub view membutuhkan kode Javascript, maka kodenya cukup ditulis di masing-masing sub view tersebut.
+
+```html
+<!-- dashboard.blade.php -->
+@extends('layout')
+
+@section('content')
+
+    <h1>Dashboard</h1>
+    
+    @include('_summary')
+    @include('_chart')
+    @include('_popularPost')
+    
+@endsection
+
+<!-- _popularPost.blade.php -->
+<section id="popularPost">
+    @foreach($popularPost as $post)
+    <div class="item">...</div>
+    @endforeach
+</section>
+
+@push('script')
+    <script>
+        $('#popularPost .item').on('click', function() {
+          //show modal
+        });
+    </script>
+@endpush
+
+<!-- _summary.blade.php -->
+<section id="summary"></section>
+
+@push('script')
+    <script>
+        // Script lainnya disini
+    </script>
+@endpush
 
 ```
 
-Contoh kedua, kita mau menambahkan filter dengan mekanisme Ajax agar tidak perlu *refresh* halaman. Kira-kira alur kodenya seperti ini:
+### 2. Tambahkan Penunjuk Arah di Main View
 
-1. Tambahkan event onclick di tombol "Tampilkan"
-2. Request ke server via Ajax
-3. Update *chart*
-4. Update tabel
+Terkadang ada kode Javascript yang berhubungan dengan beberapa atau bahkan semua sub view. Ketika memecahnya ke masing-masing sub view tidak mungkin dilakukan atau dikhawatirkan mengurangi _readability_, maka kode tersebut bisa tetap ditulis di main view, dengan **mengeksplisitkan** _identifier_ atau bahasa mudahnya: **ada penunjuk arah**.
 
-Karena aksi ini melibatkan beberapa sub view, maka lebih tepat jika kode Javascriptnya diletakkan di view utama.
+Contoh, dengan mockup dashboard yang sama, perlu ditambahkan sebuah filter tahun yang ketika diubah akan me-refresh ketiga sub view sekaligus.
 
-//TODO skeleton kode
+Versi kode yang  manusiawi adalah seperti berikut:
+```html
+<!-- dashboard.blade.php -->
+@extends('layout')
 
-Untuk memudahkan pembacaan kode, maka disarankan untuk menambahkan *identifier* di view utama, misalnya menggunakan atribut **"id"** yang berfungsi sebagai "rambu penunjuk arah". Jadi, ketika nanti ada programmer yang membaca kode Javascript, dia bisa langsung menentukan pasangan kode HTML-nya ada di sub view yang mana tanpa harus menelusuri satu per satu.
+@section('content')
 
+    <h1>Dashboard</h1>
+    
+    <select name="tahun" id="filterTahun">
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+    </select>
+    
+    <section data-role="summaryCard">
+        @include('_summary')
+    </section>
 
+    <section data-role="statistic">
+        @include('_chart')
+    </section>
 
-> :bulb: Ada dua prinsip penting yang harus dibiasakan untuk bisa menulis kode yang rapi:
->
-> 1. **Memecah** yang besar menjadi beberapa bagian kecil.
-> 2. **Dekatkan** yang saling membutuhkan.
->
-> Resapi, pahami, praktekkan, dan biasakan. Prinsip diatas berlaku di semua bahasa pemrograman dan framework.
+    <section data-role="popularPost">
+        @include('_popularPost')
+    </section>
+    
+    
+@endsection
 
+@push('script')
+    <script>
+        $('#filterTahun').on('change', function(){
+          $.ajax({}).done(function (data) {
+            $('[data-role="summaryCard"] .card').doSomething(data);
+            $('[data-role="statistic"]').doSomething(data);
+            $('[data-role="popularPost"] .item').doSomething(data);
+          });
+        });
+    </script>
+@endpush
+```
+Dengan menambahkan `data-role="foo"` maka pembaca kode (sekali lagi, pembaca kode ya, bukan kamu si penulisnya) bisa dengan mudah menemukan korelasi antara kode Javascript dan pasangan HTML-nya, meskipun ada di _file_ yang berbeda.
+
+Jika ingin lebih sederhana lagi,  kamu bisa membuat konvensi bersama tim, semua sub view harus memiliki atribut **id** yang sama dengan nama _file_. Jika seperti itu, `<section>` pembungkus di main view bisa dihilangkan.
+
+```html
+<!-- dashboard.blade.php -->
+@extends('layout')
+
+@section('content')
+
+    <h1>Dashboard</h1>
+    
+    <select name="tahun" id="filterTahun">
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+    </select>
+    
+    @include('_summary')
+    @include('_chart')
+    @include('_popularPost')
+    
+@endsection
+
+@push('script')
+    <script>
+        $('#filterTahun').on('change', function(){
+          $.ajax({}).done(function (data) {
+            // Dimana #summary? Sesuai konvensi, mari cari sub view yang namanya _summary.blade.php
+            $('#summary .card').doSomething(data);
+            $('#chart').doSomething(data);
+            $('#popularPost').doSomething(data);
+          });
+        });
+    </script>
+@endpush
+```
+
+Terapkan mana yang paling cocok buatmu (dan tim).
 
 
 ## View Share & View Composer Terlalu Magic, Hindari!
@@ -465,4 +606,15 @@ Dalam dokumentasi resmi Laravel terkait Blade Component, https://laravel.com/doc
 
 Kata kuncinya adalah **mental model**. Bagaimana kita mau memodelkan aplikasi. Bagaimana kita menerjemahkan kebutuhan bisnis menjadi struktur kode yang _long lasting_ dan tetap mudah di-_maintain_, tiga bulan lagi, 6 bulan lagi, bahkan bertahun-tahun dari sekarang.
 
->{quote} Good programmer write code for compiler, great programmer write code for human.
+## Intermeso: Kode Yang Manusiawi
+
+Ada tiga prinsip penting yang perlu dibiasakan untuk bisa menulis kode yang rapi dan manusiawi:
+1. Memecah yang besar menjadi beberapa bagian kecil.
+2. Dekatkan yang saling membutuhkan.
+3. Tambahkan penunjuk arah secara eksplisit.
+
+Prinsip diatas berlaku di semua bahasa pemrograman dan _framework_.
+    
+Silakan istirahat sejenak sebelum lanjut ke bab berikutnya.
+
+>{quote} Good programmer write code for compiler, <br>**great** programmer write code for human.
