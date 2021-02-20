@@ -608,14 +608,13 @@ Kata kuncinya adalah **mental model**. Bagaimana kita mau memodelkan aplikasi. B
 
 ## Intermeso: Kode Yang Manusiawi
 
-Ada tiga prinsip penting yang perlu dibiasakan untuk bisa menulis kode yang rapi dan manusiawi:
-1. Memecah yang besar menjadi beberapa bagian kecil.
+Sejauah ini sudah ada tiga prinsip penting yang kita ketahui untuk bisa menulis kode yang rapi dan manusiawi:
+1. Memecah yang besar menjadi kecil.
 2. Dekatkan yang saling membutuhkan.
-3. Tambahkan penunjuk arah secara eksplisit.
+3. Beri petunjuk untuk hal  _**magic**_.
 
-Prinsip diatas berlaku di semua bahasa pemrograman dan _framework_.
+Prinsip diatas bisa diterapkan untuk semua bahasa pemrograman dan _framework_.
     
-Silakan istirahat sejenak sebelum lanjut ke bab berikutnya.
 
 ## 
 >{quote} " Good programmer write code for machine, <br>**great** programmer write code for human. "

@@ -18,11 +18,33 @@ Tidak ada masalah untuk aplikasi skala kecil. Berpotensi obesitas (_Fat Controll
 Pada bab ini, kita akan belajar **hal-hal kecil dan mudah** yang bisa dilakukan untuk membuat Controller tetap _slim_ dan mudah dipahami.
 
 ## Bercerita Dengan Protected Method
+protected method adalah outline (daftar isi)
+ingat rumusnya, 
+
+```php
+contoh kode fat controller
+```
+
 ## Reusable Dengan Trait
-## Tetap Langsing Dengan Trait
+protected method hanya dikenali dalam Class yang sama
+jika butuh lintas Class, manfaatkan Trait
+
 ## Pasti Sama Dengan Base Class
-## 7 Komitmen Resource Controller
-##  Single Action Controller
+Jika butuh pengakuan (identitas), terapkan Inheritance.
+
+## Berkomitmen Dengan Resource Controller
+Jadikan 7 kata ajaib sebagai patokan dalam menerjemahkan fitur menjadi kode
+Jika bingung, limpahkan ke Single Action Controller
+
+##  Single Action Controller Untuk "Sisanya"
+Kata kerja (action)
+contoh:
+- redirect setelah login
+- download pdf
+- logout
+
 ## Dimana Pengecekan Hak Akses?
-## FormRequest Yang Tak Dianggap
+
+## FormRequest Yang Terabaikan
+
 ## Kapan Perlu Membuat Service Class?
