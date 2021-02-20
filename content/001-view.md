@@ -18,7 +18,7 @@ Programmer yang baik tahu kapan harus berhenti sejenak, mendeteksi bagian mana y
 ## Biasakan Memakai Sub View
 
 Bayangkan kamu mendapat tugas untuk membuat dashboard dengan mockup seperti di bawah ini.
-![](assets/img/dashboard.png)
+![](http://localhost/assets/img/dashboard.png)
 
 Pada umumnya, tampilan di atas akan diimplementasi menjadi satu file blade seperti berikut:
 
@@ -79,7 +79,7 @@ Kamu mungkin bertanya kenapa _file_ _blade_ pada contoh sebelumnya diberi nama `
 
 Dengan menambahkan _underscore_ sebagai prefiks, maka kita bisa melihat dengan jelas mana _view_ utama dan mana _sub view_. Editor yang kamu pakai secara otomatis akan mengurutkan _file_ secara alfabetis dan seolah-olah mengelompokkan _file_ menjadi dua bagian: bagian atas untuk _sub view_ dan bagian bawah untuk _view_ utama.
 
-![](assets/img/naming-subview.png)
+![](http://localhost/assets/img/naming-subview.png)
 
 Secara sekilas kita bisa melihat bahwa _sub view_ yang diberi prefiks lebih mudah dikenali dibanding yang tanpa prefiks. _Minimum effort, maximum effect_.
 
@@ -92,7 +92,7 @@ Setelah paham kapan harus mulai memecah _view_ agar tidak membengkak, selanjutny
 
 Anggap kita sedang mengerjakan aplikasi menggunakan Bootstrap. Lalu tampilan yang ingin dibuat adalah seperti di bawah ini:
 
-![](assets/img/grid.png)
+![](http://localhost/assets/img/grid.png)
 
 Jika tidak hati-hati, maka _view_ yang kamu buat akan seperti ini:
 ```html
@@ -272,7 +272,7 @@ Di bagian sebelumnya, kita sudah mengenal cara memecah satu file View yang besar
 
 Mari kita lihat kembali contoh mockup dashboard sebelumnya:
 
-![](assets/img/dashboard.png)
+![](http://localhost/assets/img/dashboard.png)
 
 Sekarang ada kebutuhan, setiap kali Popular Post diklik akan muncul modal yang berisi statistik sesuai judul yang dipilih.
 
