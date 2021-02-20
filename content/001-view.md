@@ -617,4 +617,5 @@ Prinsip diatas berlaku di semua bahasa pemrograman dan _framework_.
     
 Silakan istirahat sejenak sebelum lanjut ke bab berikutnya.
 
->{quote} Good programmer write code for compiler, <br>**great** programmer write code for human.
+## 
+>{quote} " Good programmer write code for machine, <br>**great** programmer write code for human. "

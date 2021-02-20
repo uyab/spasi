@@ -1,23 +1,15 @@
 # Controller
 Controller merupakan "tempat nongkrong" utama bagi programmer Laravel. Sebagian besar waktu koding akan dihabiskan disini. 
 
-Menyiapkan data untuk View.
-
-Memvalidasi form.
-
-Memproses submit form.
-
-Memanggil query builder.
-
-Memanggil Eloquent Model.
-
-Pengecekan hak akses.
-
-Ekspor ke PDF.
-
-Ekspor ke Excel.
-
-_Looping_, _if else_, dan _logic_ aplikasi akan sangat banyak ditemui di Controller.
+- Menyiapkan data untuk View.
+- Memvalidasi form.
+- Memproses submit form.
+- Memanggil query builder.
+- Memanggil Eloquent Model.
+- Pengecekan hak akses.
+- Ekspor ke PDF.
+- Ekspor ke Excel.
+- _Looping_, _if else_, dan _logic_ aplikasi akan sangat banyak ditemui di Controller.
 
 Ketika kamu baru mengenal M-V-C, wajar jika pilihannya hanya terbatas pada ketiga komponen tersebut. Model untuk "simpan-pinjam" data dari database, View untuk menampilkan data, dan **Controller untuk sisanya**.
 
