@@ -42,9 +42,16 @@ Bukan salah kode.
 Tiga bulan yang lalu kamu memang hanya menulis potongan kode, **bukan cerita**.
 
 ## Bercerita Dengan Protected Method
+
 Baris kode adalah buah pikir programmer yang menulisnya. Sama seperti cerpen yang dihasilkan seorang penulis. Sama seperti pidato atau video motivasi yang dihasilkan seorang _public speaker_.
 
-Kamu. Iya, kamu.
+Pemilihan kata, pemenggalan kalimat, dan intonasi menjadi penting agar pesan tersampaikan.
+
+Dari ketiga aspek M-V-C, Controller biasanya menjadi tempat yang paling sering dikunjungi (untuk dibaca atau ditulis). Oleh sebab itu menjadi penting untuk membuat sebuah Controller yang bisa "bercerita", agar pengunjung (programmer setelahmu, atau kamu sendiri tiga bulan kemudian) tidak tersesat.
+
+### Buat Outline (Daftar Isi)
+Seberapa sering kamu corat-coret (outlining) sebelum koding? Outline merupakan salah satu metode agar koding lebih terstruktur, bukan hanya sekedal tambal sulam.
+
 
 protected method adalah outline (daftar isi)
 ingat rumusnya, 
@@ -60,9 +67,74 @@ jika butuh lintas Class, manfaatkan Trait
 ## Pasti Sama Dengan Base Class
 Jika butuh pengakuan (identitas), terapkan Inheritance.
 
-## Berkomitmen Dengan Resource Controller
-Jadikan 7 kata ajaib sebagai patokan dalam menerjemahkan fitur menjadi kode
-Jika bingung, limpahkan ke Single Action Controller
+## Maksimal Tujuh Dengan Resource Controller
+
+Bagaimana kalau saya bilang, seberapapun kompleksnya aplikasi yang kamu bangun, jumlah Action dalam suatu Controller selalu bisa dibikin agar **tidak pernah lebih dari tujuh**.
+
+Tujuh adalah jumlah aksi maksimal yang bisa kita lakukan terhadap suatu _resource_, paling tidak demikianlah [Laravel mengajarkan kita](https://laravel.com/docs/master/controllers#resource-controllers).
+
+![](http://spasi.test/assets/img/resource-controller.png)
+
+Terlebih lagi jika aplikasi yang sedang dikembangkan bertipikal CRUD, aturan **masksimal tujuh** harusnya bisa dengan mudah diterapkan. Kita tidak perlu membuat Custom Action di Controller. 
+
+### Apa Itu Custom Action?
+Custom Action adalah ketika kamu mendefinisikan route dan method baru di Controller, di luar tujuh standard.
+
+```php
+// routes/web.php
+Route::resource('users', UserController::class);
+Route::get('/users/downloadPdf', [UserController::class, 'downloadPdf']);
+
+// UserController.php
+class UserController extends Controller {
+  public function index(){...}
+  public function show(){...}
+  public function create(){...}
+  public function store(){...}
+  public function edit(){...}
+  public function update(){...}
+  public function delete(){...}
+
+  public function downloadPdf()
+  {
+    // generate PDF
+  }
+  
+}
+```
+Pada contoh di atas, `downloadPdf()` merupakan Custom Action.
+
+### Apa Itu Resource Controller?
+**Resource Controller** adalah sebuah konsep untuk menunjukkan hubungan antara data dan aksi apa saja yang bisa dilakukan terhadap data tersebut. _Resource_ biasanya mengacu ke sebuah tabel _database_, gabungan beberapa tabel (join), sub tabel (tabel dengan kondisi tertentu), kolom (atribut), atau entitas lain sesuai kebutuhan aplikasi.
+
+| Resource (Data) | Controller              | Contoh Aksi                                                                                             |
+|-----------------|-------------------------| ------------------------------------------------------------------------------------------------------- |
+| Satu tabel      | PostController          | index (tampilkan semua post) <br> store (menyimpan Post baru) <br> destroy (hapus permanen sebuah Post) |
+| Banyak tabel    | StatisticController     | index                                                                                                   |
+| Sub tabel       | PublishedPostController | store (publish post) <br> destroy (unpublish post)                                                      |
+| Kolom tertentu  | PasswordController      | edit <br> update <br> ~~destroy~~ (password tidak bisa didelete)                                        |
+| Entitas lain    | DbBackupController      | index (tampilkan semua backup)<br> store (menambah backup baru)<br> destroy (hapus salah satu backup)   |
+
+### Berpikir Resource
+Sampai di sini kamu sudah mengenal apa itu Custom Action dan apa itu Resource Controller, dan _goal_ yang ingin dicapai adalah bagaimana menghilangkan Custom Action agar semua Controller bisa _**strict**_ hanya memakai **tujuh kata**.
+
+### Studi Kasus
+Mari kita latihan membuat Resource Controller dari beberapa contoh kasus yang sering kita temui. 
+
+#### Follow Unfollow
+```
+// BAD
+UserController@follow
+UserController@unfollow
+
+// GOOD
+
+```
+
+
+
+Kembali ke contoh `downloadPdf()`, ada solusi lain yang lebih tepat, yaitu dengan membuat _dedicated_ **Single Action Controller**.
+
 
 ##  Single Action Controller Untuk "Sisanya"
 Kata kerja (action)
@@ -70,6 +142,21 @@ contoh:
 - redirect setelah login
 - download pdf
 - logout
+
+```php
+// routes/web.php
+Route::post('/users/pdf', User/DownloadPdf::class);
+
+// Controller/User/DownloadPdf.php
+class DownloadPdf extends Controller {
+  public function __invoke()
+  {
+    // generate PDF
+  }
+  
+}
+```
+
 
 ## Dimana Pengecekan Hak Akses?
 
