@@ -41,26 +41,150 @@ Bukan salah kode.
 
 Tiga bulan yang lalu kamu memang hanya menulis potongan kode, **bukan cerita**.
 
+## Buat Outline (Daftar Isi)
+Seberapa sering kamu corat-coret (outlining) sebelum koding? Outline merupakan salah satu metode agar kodingan lebih runut dan terstruktur.
+
+Sebagai contoh, kita akan membuat sebuah fungsi untuk menyimpan informasi buku dan gambar *cover*-nya. Maka mulailah dengan menuliskan langkah apa saja yang diperlukan untuk menyelesaikan fungsi tersebut.
+
+```php
+public function store(Request $request)
+{
+  // 1. validasi form
+  // 2. simpan file gambar cover
+  // 3. simpan data buku ke DB
+  // 4. redirect dan tampilkan pesan sukses
+}
+```
+
+Setelah *outline* dirasa cukup, kita tinggal menuliskan kode untuk setiap langkah. **Kerjakan dulu langkah yang paling gampang**. Jika ada kesulitan di suatu langkah, cukup tuliskan `//TODO` dan gunakan ***dummy variable*** dulu.
+
+```php
+// Kode diambil dari https://github.com/febrihidayan/laravel-blog dengan modifikasi.
+
+public function store(Request $request)
+{
+  // 1. validasi form
+    $this->validate($request, [
+    'judul' => 'required|string|max:255',
+    'isbn' => 'required|string'
+  ]);
+  
+  //TODO 2. simpan file gambar cover
+  $cover = "-";
+
+  // 3. simpan data buku ke DB
+  Buku::create([
+    'judul' => $request->get('judul'),
+    'isbn' => $request->get('isbn'),
+    'pengarang' => $request->get('pengarang'),
+    'penerbit' => $request->get('penerbit'),
+    'tahun_terbit' => $request->get('tahun_terbit'),
+    'jumlah_buku' => $request->get('jumlah_buku'),
+    'deskripsi' => $request->get('deskripsi'),
+    'lokasi' => $request->get('lokasi'),
+    'cover' => $cover
+  ]);
+  
+  // 4. redirect dan tampilkan pesan sukses
+  alert()->success('Berhasil.','Data telah ditambahkan!');
+
+  return redirect()->route('buku.index');  
+}
+```
+
+Pada contoh di atas, menyimpan gambar hasil upload dirasa cukup sulit untuk dilakukan. Maka kita bisa mengabaikannya dulu, namun tidak sampai menjadi *blocking* karena aplikasi tetep bisa dites dan *flow* tetap berjalan dengan normal.
+
 ## Bercerita Dengan Protected Method
 
 Baris kode adalah buah pikir programmer yang menulisnya. Sama seperti cerpen yang dihasilkan seorang penulis. Sama seperti pidato atau video motivasi yang dihasilkan seorang _public speaker_.
 
 Pemilihan kata, pemenggalan kalimat, dan intonasi menjadi penting agar pesan tersampaikan.
 
-Dari ketiga aspek M-V-C, Controller biasanya menjadi tempat yang paling sering dikunjungi (untuk dibaca atau ditulis). Oleh sebab itu menjadi penting untuk membuat sebuah Controller yang bisa "bercerita", agar pengunjung (programmer setelahmu, atau kamu sendiri tiga bulan kemudian) tidak tersesat.
+Dari ketiga aspek M-V-C,  **biasanya** Controller menjadi tempat yang paling sering dikunjungi (untuk dibaca atau ditulis). Oleh sebab itu menjadi penting untuk membuat sebuah Controller yang bisa "bercerita", agar pengunjung (programmer setelahmu, atau kamu sendiri tiga bulan kemudian) tidak tersesat.
 
-### Buat Outline (Daftar Isi)
-Seberapa sering kamu corat-coret (outlining) sebelum koding? Outline merupakan salah satu metode agar koding lebih terstruktur, bukan hanya sekedal tambal sulam.
+<hr>
 
+Melanjutkan contoh sebelumnya, jika ada satu ***logical block*** yang dirasa cukup kompleks, kita bisa memindahkannya ke fungsi tersendiri. Dalam konsep OOP, kita bisa membuat sebuah ***protected method***.
 
-protected method adalah outline (daftar isi)
-ingat rumusnya, 
 
 ```php
-contoh kode fat controller
+// Kode diambil dari https://github.com/febrihidayan/laravel-blog dengan modifikasi.
+
+public function store(Request $request)
+{
+  // 1. validasi form
+    $this->validate($request, [
+    'judul' => 'required|string|max:255',
+    'isbn' => 'required|string'
+  ]);
+  
+  //TODO 2. simpan file gambar cover
+  $cover = $this->uploadCover($request);
+
+  // 3. simpan data buku ke DB
+  Buku::create([
+    'judul' => $request->get('judul'),
+    'isbn' => $request->get('isbn'),
+    'pengarang' => $request->get('pengarang'),
+    'penerbit' => $request->get('penerbit'),
+    'tahun_terbit' => $request->get('tahun_terbit'),
+    'jumlah_buku' => $request->get('jumlah_buku'),
+    'deskripsi' => $request->get('deskripsi'),
+    'lokasi' => $request->get('lokasi'),
+    'cover' => $cover
+  ]);
+
+  // 4. redirect dan tampilkan pesan sukses
+  alert()->success('Berhasil.','Data telah ditambahkan!');
+
+  return redirect()->route('buku.index');
+
+}
+
+protected function uploadCover($request)
+{
+  $cover = null;
+
+  if($request->file('cover')) {
+    $file = $request->file('cover');
+    $dt = Carbon::now();
+    $acak  = $file->getClientOriginalExtension();
+    $fileName = rand(11111,99999).'-'.$dt->format('Y-m-d-H-i-s').'.'.$acak; 
+    $request->file('cover')->move("images/buku", $fileName);
+    $cover = $fileName;
+  }
+
+  return $cover;
+}
 ```
 
+
+
+Jika proses validasi form dan proses menyimpan ke database dirasa cukup kompleks, kita bisa melakukan hal yang sama untuk kedua ***logical block*** tersebut.
+
+```php
+public function store(Request $request)
+{
+  $this->validateBuku($request);  
+
+  $cover = $this->uploadCover($request);
+	
+  $buku = $this->storeBuku($request, $cover);
+
+  alert()->success('Berhasil.','Data telah ditambahkan!');
+
+  return redirect()->route('buku.index');
+}
+```
+
+Apakah menurutmu kode di atas lebih mudah dipahami? Untuk Controller yang sederhana bisa jadi tidak terlalu terlihat bedanya. Tapi percayalah bahwa kebiasaan ini akan sangat bermanfaat ketika kompleksitas kode yang kamu buat sudah semakin meningkat.
+
+
+
+Selamat bercerita!
+
 ## Reusable Dengan Trait
+
 protected method hanya dikenali dalam Class yang sama
 jika butuh lintas Class, manfaatkan Trait
 
