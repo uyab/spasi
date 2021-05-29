@@ -183,13 +183,33 @@ Apakah menurutmu kode di atas lebih mudah dipahami? Untuk Controller yang sederh
 
 Selamat bercerita!
 
+## Reusable Dengan Protected Method
+
+Kelebihan lain dari *protected method* adalah *reusable*, yaitu kita bisa menggunakan *method* tersebut di tempat lain yang membutuhkan. Contoh klasik yang sering dijumpai adalah kemiripan antara proses menyimpan (*store*) dan memperbarui (*update*) buku.
+
+```php
+public function update(Request $request)
+{
+  $this->validateBuku($request);  
+
+  $cover = $this->uploadCover($request);
+  
+  $buku = $this->updateBuku($request, $cover);
+
+  alert()->success('Berhasil.','Data telah diubah!');
+
+  return redirect()->route('buku.index');
+}
+```
+
+Bisa dilihat, setelah sebelumnya kita memindahkan *logic* upload cover ke *protected method* tersendiri, maka ketika *update* kita tinggal memanggil kembali *method* tersebut. Tidak ada duplikasi kode. Ketika ada perubahan terkait penanganan *cover file*, misalnya folder penyimpanan berubah, maka yang diubah cukup satu tempat saja, yaitu di *method* `uploadCover()`.
+
+
+
 ## Reusable Dengan Trait
+Logicnya mirip
 
-protected method hanya dikenali dalam Class yang sama
-jika butuh lintas Class, manfaatkan Trait
-
-## Pasti Sama Dengan Base Class
-Jika butuh pengakuan (identitas), terapkan Inheritance.
+Perlu lintas class
 
 ## Maksimal Tujuh Dengan Resource Controller
 
