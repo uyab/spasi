@@ -71,7 +71,7 @@ public function store(Request $request)
   
   //TODO 2. simpan file gambar cover
   $cover = "-";
-
+  
   // 3. simpan data buku ke DB
   Buku::create([
     'judul' => $request->get('judul'),
@@ -87,7 +87,7 @@ public function store(Request $request)
   
   // 4. redirect dan tampilkan pesan sukses
   alert()->success('Berhasil.','Data telah ditambahkan!');
-
+  
   return redirect()->route('buku.index');  
 }
 ```
@@ -102,7 +102,7 @@ Pemilihan kata, pemenggalan kalimat, dan intonasi menjadi penting agar pesan ter
 
 Dari ketiga aspek M-V-C,  **biasanya** Controller menjadi tempat yang paling sering dikunjungi (untuk dibaca atau ditulis). Oleh sebab itu menjadi penting untuk membuat sebuah Controller yang bisa "bercerita", agar pengunjung (programmer setelahmu, atau kamu sendiri tiga bulan kemudian) tidak tersesat.
 
-<hr>
+
 
 Melanjutkan contoh sebelumnya, jika ada satu ***logical block*** yang dirasa cukup kompleks, kita bisa memindahkannya ke fungsi tersendiri. Dalam konsep OOP, kita bisa membuat sebuah ***protected method***.
 
@@ -168,7 +168,7 @@ public function store(Request $request)
   $this->validateBuku($request);  
 
   $cover = $this->uploadCover($request);
-	
+  
   $buku = $this->storeBuku($request, $cover);
 
   alert()->success('Berhasil.','Data telah ditambahkan!');
