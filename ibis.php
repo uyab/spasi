@@ -24,7 +24,7 @@ return [
         // 'body' => 'Literata.ttf',
         // 'monospace' => 'FiraCode.ttf',
         'monospace' => 'JetBrainsMono.ttf',
-        'quote' => 'Caveat-Regular.ttf',
+        'quote' => 'JetBrainsMono.ttf',
     ],
 
     /**

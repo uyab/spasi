@@ -475,4 +475,6 @@ Beberapa contoh aksi yang cocok dijadikan *single action controller* antara lain
 
 ## FormRequest Yang Terabaikan
 
-## Kapan Perlu Membuat Service Class?
+## Jangan Percaya User!
+
+## Intermeso: Tell, Don't Ask

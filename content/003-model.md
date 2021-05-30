@@ -2,6 +2,20 @@
 
 ## Tetap Langsing Dengan Trait
 
-## Chapter 2
+## Tetap Rapi Dengan Trait
 
-## Chapter 3
+## Encapsulation Dengan Accessor
+
+## Mengganti Accessor Dengan Getter
+
+## Standardisasi Accessor Dengan Prefix
+
+## Berdamai Dengan Active Record
+
+## Pegawais? Penggunas? Saatnya "Break The Rules"
+
+## Bercerita Dengan Scope
+
+## Pasti Aman Dengan withDefault()
+
+## Intermeso: Fat Model
