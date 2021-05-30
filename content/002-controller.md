@@ -316,8 +316,25 @@ Tujuh adalah jumlah aksi maksimal yang bisa kita lakukan terhadap suatu _resourc
 
 Terlebih lagi jika aplikasi yang sedang dikembangkan bertipikal CRUD, aturan **masksimal tujuh** harusnya bisa dengan mudah diterapkan. Kita tidak perlu membuat Custom Action di Controller. 
 
+### Apa Itu Resource Controller?
+
+**Resource Controller** adalah sebuah konsep untuk menunjukkan hubungan antara data dan aksi apa saja yang bisa dilakukan terhadap data tersebut. _Resource_ biasanya mengacu ke sebuah tabel _database_, gabungan beberapa tabel (join), sub tabel (tabel dengan kondisi tertentu), kolom (atribut), atau entitas lain sesuai kebutuhan aplikasi.
+
+| Resource (Data) | Controller              | Contoh Aksi                                                  |
+| --------------- | ----------------------- | ------------------------------------------------------------ |
+| Satu tabel      | PostController          | index (tampilkan semua post) <br> store (menyimpan Post baru) <br> destroy (hapus permanen sebuah Post) |
+| Banyak tabel    | StatisticController     | index                                                        |
+| Sub tabel       | PublishedPostController | store (publish post) <br> destroy (unpublish post)           |
+| Kolom tertentu  | PasswordController      | edit <br> update <br> ~~destroy~~ (password tidak bisa didelete) |
+| Entitas lain    | DbBackupController      | index (tampilkan semua backup)<br> store (menambah backup baru)<br> destroy (hapus salah satu backup) |
+
+### Berpikir Resource
+
+Sampai di sini kamu sudah mengenal apa itu Custom Action dan apa itu Resource Controller, dan _goal_ yang ingin dicapai adalah bagaimana menghilangkan Custom Action agar semua Controller bisa _**strict**_ hanya memakai **tujuh kata**.
+
 ### Apa Itu Custom Action?
-Custom Action adalah ketika kamu mendefinisikan route dan method baru di Controller, di luar tujuh standard.
+
+Custom Action adalah ketika kamu mendefinisikan route dan method baru di Controller, di luar tujuh *method* standard.
 
 ```php
 // routes/web.php
@@ -343,36 +360,65 @@ class UserController extends Controller {
 ```
 Pada contoh di atas, `downloadPdf()` merupakan Custom Action.
 
-### Apa Itu Resource Controller?
-**Resource Controller** adalah sebuah konsep untuk menunjukkan hubungan antara data dan aksi apa saja yang bisa dilakukan terhadap data tersebut. _Resource_ biasanya mengacu ke sebuah tabel _database_, gabungan beberapa tabel (join), sub tabel (tabel dengan kondisi tertentu), kolom (atribut), atau entitas lain sesuai kebutuhan aplikasi.
 
-| Resource (Data) | Controller              | Contoh Aksi                                                                                             |
-|-----------------|-------------------------| ------------------------------------------------------------------------------------------------------- |
-| Satu tabel      | PostController          | index (tampilkan semua post) <br> store (menyimpan Post baru) <br> destroy (hapus permanen sebuah Post) |
-| Banyak tabel    | StatisticController     | index                                                                                                   |
-| Sub tabel       | PublishedPostController | store (publish post) <br> destroy (unpublish post)                                                      |
-| Kolom tertentu  | PasswordController      | edit <br> update <br> ~~destroy~~ (password tidak bisa didelete)                                        |
-| Entitas lain    | DbBackupController      | index (tampilkan semua backup)<br> store (menambah backup baru)<br> destroy (hapus salah satu backup)   |
-
-### Berpikir Resource
-Sampai di sini kamu sudah mengenal apa itu Custom Action dan apa itu Resource Controller, dan _goal_ yang ingin dicapai adalah bagaimana menghilangkan Custom Action agar semua Controller bisa _**strict**_ hanya memakai **tujuh kata**.
 
 ### Studi Kasus
 Mari kita latihan membuat Resource Controller dari beberapa contoh kasus yang sering kita temui. 
 
 #### Follow Unfollow
-```
-// BAD
+```php
+// Custom Action
 UserController@follow
 UserController@unfollow
 
-// GOOD
+// Resource Controller
+FollowController@store // follow action
+FollowController@destroy // unfollow action
 
+// Pada kasus ini, kita mengganggap "Follow" adalah sebuah resource yang bisa ditambah
+// (ketika user mem-follow user yang lain) atau bisa dihapus (ketika user meng-unfollow)
 ```
 
 
 
-Kembali ke contoh `downloadPdf()`, ada solusi lain yang lebih tepat, yaitu dengan membuat _dedicated_ **Single Action Controller**.
+#### Upload Profile Picture
+
+```php
+// Custom Action
+UserController@uploadProfilePicture
+  
+// Resource Controller
+UserProfilePicture@update
+  
+// Pola yang mirip, disini kita memecah `uploadProfilePicture` menjadi resource tersendiri:
+// ProfilePicture (atau UserProfilePicture agar lebih jelas) + method update.
+```
+
+
+
+#### Produk Global vs Produk Milik User
+
+Contoh yang sering dijumpai dalam sebuah web marketplace adalah adanya dua halaman untuk menampilkan produk:
+
+- URL `/produk` menampilkan produk dari seluruh user.
+- URL `/tokosaya/produk` menampilkank produk hanya dari **toko** saja.
+
+Mari kita lihat bagaimana penerapan dari masing-masing cara penulisan Controller:
+
+```php
+// Custom Action
+ProductController@index
+ProductController@indexToko
+  
+// Resource Controller
+ProductController@index
+
+User\ProductController@index // menggunakan namespace sebagai pembeda
+//atau
+UserProductController@index // menggunakan prefix sebagai pembeda
+```
+
+
 
 
 ##  Single Action Controller Untuk "Sisanya"
