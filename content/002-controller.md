@@ -207,9 +207,102 @@ Bisa dilihat, setelah sebelumnya kita memindahkan *logic* upload cover ke *prote
 
 
 ## Reusable Dengan Trait
-Logicnya mirip
+*Protected method* hanya bisa dipanggil dalam sebuah `Class` yang sama. Bagaimana jika kita juga membutuhkan fungsionalitas untuk upload cover di `Class` yang lain?
 
-Perlu lintas class
+Sebagai contoh, user guest juga bisa menginput data buku, hanya saja data yang diinputkan tersebut perlu diverifikasi dulu oleh admin.
+
+```php
+class BukuController extends Controller
+{
+  	public function store(Request $request)
+    {
+      ...
+      $cover = $this->uploadCover($request);
+      ...      
+    }
+}
+
+class PublicBukuController extends Controller
+{
+  	public function store(Request $request)
+    {
+      ...
+      $cover = $this->uploadCover($request);
+      ...      
+    }  
+}
+```
+
+Karena sebelumnya method `uploadCover` hanya didefinisikan di `BukuController`, maka kelas `PublicBukuController` tidak bisa mengenali method tersebut. Mau tidak mau kita harus *copy paste* dulu fungsi tersebut. 
+
+Nah, ada cara lain yang lebih tepat untuk kasus seperti ini, yaitu dengan memindahkan method `uploadCover` ke sebuah Trait.
+
+Pertama-tama, buat sebuah Trait tersendiri, misalnya `app\Http\Traits\UploadCoverTrait`.
+
+```php
+namespace App\Http\Traits;
+
+trait UploadCoverTrait
+{
+}
+
+```
+
+Lalu pindahkan method `uploadCover` dari Controller ke Trait tersebut.
+
+```php
+namespace App\Http\Traits;
+
+trait UploadCoverTrait
+{
+    protected function uploadCover($request)
+    {
+        $cover = null;
+
+        if ($request->file('cover')) {
+            $file = $request->file('cover');
+            $dt = Carbon::now();
+            $acak = $file->getClientOriginalExtension();
+            $fileName = rand(11111, 99999).'-'.$dt->format('Y-m-d-H-i-s').'.'.$acak;
+            $request->file('cover')->move("images/buku", $fileName);
+            $cover = $fileName;
+        }
+
+        return $cover;
+    }
+}
+
+```
+
+Selanjutnya, untuk setiap Controller yang membutuhkan fungsionalitas upload cover, cukup memanggil Trait tersebut.
+
+```php
+class BukuController extends Controller
+{
+    use UploadCoverTrait;
+  
+  	public function store(Request $request)
+    {
+      ...
+      $cover = $this->uploadCover($request);
+      ...      
+    }
+}
+
+class PublicBukuController extends Controller
+{
+    use UploadCoverTrait;
+  
+  	public function store(Request $request)
+    {
+      ...
+      $cover = $this->uploadCover($request);
+      ...      
+    }  
+}
+```
+
+Selamat, kamu sudah berhasil membuat sebuah Trait yang *reusable*. Konsep ini tidak hanya terbatas di Controller, tapi kamu juga bisa menerapkannya di persoalan yang lain.
 
 ## Maksimal Tujuh Dengan Resource Controller
 
