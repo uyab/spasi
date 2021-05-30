@@ -214,7 +214,7 @@ Sebagai contoh, user guest juga bisa menginput data buku, hanya saja data yang d
 ```php
 class BukuController extends Controller
 {
-  	public function store(Request $request)
+    public function store(Request $request)
     {
       ...
       $cover = $this->uploadCover($request);
@@ -224,7 +224,7 @@ class BukuController extends Controller
 
 class PublicBukuController extends Controller
 {
-  	public function store(Request $request)
+    public function store(Request $request)
     {
       ...
       $cover = $this->uploadCover($request);
@@ -280,8 +280,8 @@ Selanjutnya, untuk setiap Controller yang membutuhkan fungsionalitas upload cove
 class BukuController extends Controller
 {
     use UploadCoverTrait;
-  
-  	public function store(Request $request)
+    
+    public function store(Request $request)
     {
       ...
       $cover = $this->uploadCover($request);
@@ -292,8 +292,8 @@ class BukuController extends Controller
 class PublicBukuController extends Controller
 {
     use UploadCoverTrait;
-  
-  	public function store(Request $request)
+    
+    public function store(Request $request)
     {
       ...
       $cover = $this->uploadCover($request);
@@ -302,7 +302,9 @@ class PublicBukuController extends Controller
 }
 ```
 
-Selamat, kamu sudah berhasil membuat sebuah Trait yang *reusable*. Konsep ini tidak hanya terbatas di Controller, tapi kamu juga bisa menerapkannya di persoalan yang lain.
+Selamat, kamu sudah berhasil membuat sebuah Trait yang *reusable*. Konsep ini tidak hanya terbatas di Controller. Kamu bebas (dan sangat diharapkan) untuk bisa menerapkannya di persoalan yang lain.
+
+
 
 ## Maksimal Tujuh Dengan Resource Controller
 
