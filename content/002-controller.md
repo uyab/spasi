@@ -401,7 +401,7 @@ UserProfilePicture@update
 Contoh yang sering dijumpai dalam sebuah web marketplace adalah adanya dua halaman untuk menampilkan produk:
 
 - URL `/produk` menampilkan produk dari seluruh user.
-- URL `/tokosaya/produk` menampilkank produk hanya dari **toko** saja.
+- URL `/<username>/produk` menampilkan produk hanya dari **user tertentu** saja.
 
 Mari kita lihat bagaimana penerapan dari masing-masing cara penulisan Controller:
 
@@ -420,27 +420,55 @@ UserProductController@index // menggunakan prefix sebagai pembeda
 
 
 
+### Referensi
+
+- [Cruddy By Design - Youtube](https://www.youtube.com/watch?v=MF0jFKvS4SI)
+
+
 
 ##  Single Action Controller Untuk "Sisanya"
-Kata kerja (action)
-contoh:
-- redirect setelah login
-- download pdf
-- logout
+
+Ketika ada kesulitan mendesain sebuah resource controller agar tetap patuh dengan **tujuh kata **, maka kita bisa memanfaatkan single action controller. Biasanya hal ini dijumpai ketika ada aksi-aksi diluar CRUD yang memang perlu ditambahkan ke dalam aplikasi.
+
+Sebagai contoh, kita sudah mendefinisikan resource controller untuk melakukan manajemen produk:
+
+```php
+Route::resource('products', ProductController::class);
+```
+
+Lalu ada kebutuhan untuk menambahkan fitur ekspor produk ke PDF, maka kita bisa membuat sebuah single action controller:
 
 ```php
 // routes/web.php
-Route::post('/users/pdf', User/DownloadPdf::class);
+Route::resource('products', ProductController::class);
+Route::post('/products/pdf', Products/DownloadPdf::class);
 
-// Controller/User/DownloadPdf.php
-class DownloadPdf extends Controller {
+// Controller/Product/DownloadPdf.php
+class DownloadPdf extends Controller 
+{
   public function __invoke()
   {
     // generate PDF
-  }
-  
+  }  
 }
 ```
+
+Biasanya, aksi-aksi dalam sebuah *single action controller* tidak membutuhkan sebuah view, melainkan hanya respon dari sebuah tombol.
+
+Beberapa contoh aksi yang cocok dijadikan *single action controller* antara lain:
+
+- Tombol download pdf atau excel.
+- Tombol logout.
+- Tombol refresh cache.
+- Tombol impersonate user.
+- Tombol untuk men-trigger backup DB.
+
+
+
+### Referensi
+
+- https://laravel.com/docs/8.x/controllers#single-action-controllers
+
 
 
 ## Dimana Pengecekan Hak Akses?
