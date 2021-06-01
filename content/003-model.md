@@ -16,18 +16,18 @@
 
 Kita tahu bahwa satu Eloquent Model merepresentasikan satu buah tabel di *database*. Kita juga sudah paham dengan konvensi penamaan tabel yang merupakan bentuk jamak dari nama model. 
 
-| No   | Model (singular) | Nama Tabel (plural) |
-| ---- | ---------------- | ------------------- |
-| 1    | User             | users               |
-| 2    | Book             | books               |
-| 3    | Box              | boxes               |
-| 4    | Person           | people (hmm)        |
-| 5    | Ox               | oxen (???)          |
+| Model (singular) | Nama Tabel (plural) |
+| ---------------- | ------------------- |
+| User             | users               |
+| Book             | books               |
+| Box              | boxes               |
+| Person           | people (hmm)        |
+| Ox               | oxen (???)          |
 
 Dalam bahasa Inggris, perubahan dari singular menjadi bentuk plural dibagi menjadi dua: 
 
 1. Yang beraturan, biasanya ditambahi `s` atau `es` dibelakang kata.
-2. Yang tidak beraturan, sesuai contoh 4 dan 5 di atas.
+2. Yang tidak beraturan, sesuai dua contoh terakhir di atas.
 
 Itulah kenapa sering dijumpai nama tabel yang aneh dibaca seperti **penggunas** dan **pegawais**. Kita membuat aplikasi dengan *domain* Indonesia, tapi mengikuti konvensi bahasa Inggris. Jadinya kan aneh.
 
