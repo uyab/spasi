@@ -478,3 +478,17 @@ Beberapa contoh aksi yang cocok dijadikan *single action controller* antara lain
 ## Jangan Percaya User!
 
 ## Intermeso: Tell, Don't Ask
+
+Sekarang malam minggu. Kamu baru saja selesai bermain futsal bersama teman-teman. Rasanya perut sangat lapar. Tapi karena sudah malam, sebagian besar penjual makanan sudah tutup, kecuali satu warung tenda Lamongan. Itupun nampak sudah tidak lengkap stok menunya.
+
+Kamu: nasinya masih, Mas?
+
+Penjual: masih bang.
+
+Lauknya tinggal apa?
+
+Penjual: ayam sama lele
+
+### Referensi
+
+- https://martinfowler.com/bliki/TellDontAsk.html
