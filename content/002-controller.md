@@ -546,7 +546,136 @@ class PostController extends Controller
 
 Method Controller kita sekarang menjadi lebih langsing dan ***to the point***, dengan tidak ada fungsionalitas yang dikurangi. Validasi form tetap jalan, hanya kita pindahkan saja kodenya.
 
+Selain untuk validasi, class Form Request juga memiliki kegunaan yang lain, antara lain:
+
+1. Melakukan authorization atau pengecekan hak akses.
+1. Memodifikasi inputan form
+1. Kustomisasi pesan error
+
 ## Jangan Percaya User!
+
+1. Input form
+1. Parameter URL
+
+
+
+```http
+http://localhost/post/8
+```
+
+
+
+Dengan URL di atas, maka tipikal kode yang sering ditemui di Controller adalah seperti ini:
+
+```php
+class PostController extends Controller
+{
+    public function show($id)
+    {
+        $post = Post::find($id);
+        $comments = $post->comments;
+
+        return view('post.show', compact('post', 'comments'));
+    }
+}
+```
+
+Ingat, URL adalah kekuasaan User. Artinya, User bisa mengganti URL sesukanya (baik disengaja atau tidak). Pastikan ketika User mengetik URL yang aneh dan tidak masuk akal, aplikasi yang kita bikin tetap mampu menanganinya dan bukan menampilkan error 500. Idealnya, aplikasi menampilkan halaman **404 not found**, atau redirect ke halaman lain.
+
+Coba cek kembali aplikasi yang sudah pernah Anda bikin. Buka sebuah halaman yang menampilkan *list of data*, lalu klik detail. Biasanya kita akan dibawa ke halaman baru dengan format URL yang mengandung parameter ID atau slug seperti di bawah ini:
+
+```http
+http://localhost/post/99990
+```
+
+
+
+```http
+http://localhost/post/hello-world
+```
+
+
+
+Atau kalau ingin melihat contoh nyata, silakan buka URL https://inaproc.id/berita, lalu pilih salah satu berita. Setelah itu, coba ubah URL-nya, misalnya: 
+
+```http
+https://inaproc.id/berita/Aplikasi/Tingkatkan-Keamanan-Akun-Pengguna,-SPSE-Kini-ada-Fitur-Password-Meter
+```
+
+Diubah menjadi:
+
+```http
+https://inaproc.id/berita/Aplikasi/1234
+```
+
+Apa yang ditampilkan oleh aplikasi? Halaman error atau halaman 404 ?
+
+
+
+### Jangan Hanya Fokus ke Happy Case
+
+Contoh di atas adalah contoh dimana kita sebagai programmer hanya fokus ke *happy case* atau kasus ideal. Kasus dimana datanya valid, lingkungan atau resource mendukung, dan tidak ada orang iseng diluar sana.
+
+Dunia tidak seindah itu. 
+
+Pada prakteknya, banyak *edge case* atau *alternative case* yang harus di-*handle*, dimana hal tersebut juga merupakan tanggung jawab programmer.
+
+Jangan bergantung ke Analis atau Tester. Mulai sekarang, biasakan untuk sedikit "paranoid". 
+
+Bagaimana ya jika saya bikin input seperti ini? 
+
+Bagaimana ya jika filenya tidak terbaca? 
+
+Bagaimana ya jika koneksi API putus di tengah proses?
+
+Bagaimana ya jika database mati?
+
+### Defensive Programming
+
+Kembali ke contoh URL berita sebelumnya, cara paling sederhana adalah menambahkan pengecekan sesaat setelah kita mendapatkan object `$post`.
+
+```php
+class PostController extends Controller
+{
+    public function show($id)
+    {
+        $post = Post::find($id);
+        
+        if ($post === null) {
+            abort(404);
+        }
+        
+        $comments = $post->comments;
+
+        return view('post.show', compact('post', 'comments'));
+    }
+}
+```
+
+Berdasar pengalaman saya sejauh ini, salah satu error yang paling sering dijumpai oleh programmer adalah `Null Pointer Exception`. Setiap kali memanggil method, kita harus memastikan return value dari method tersebut. Jika mungkin mengembalikan `null`, maka mau tidak mau kita harus menambahkan pengecekan `if null` seperti di atas.
+
+### findOrFail 
+
+Versi lebih singkat, kita bisa memanfaatkan method `findOrFail` atau `firstOrFail` bawaan Laravel:
+
+```php
+class PostController extends Controller
+{
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
+        $comments = $post->comments;
+
+        return view('post.show', compact('post', 'comments'));
+    }
+}
+```
+
+Ketika tidak ada model Post dengan ID yang dimaksud, maka Laravel secara otomatis akan menampilkan halaman **404 not found**. Lebih sederhana dan cukup untuk kasus umum sehari-hari.
+
+### Referensi
+
+https://laravel.com/docs/8.x/eloquent#not-found-exceptions
 
 ## Intermeso: Tell, Don't Ask
 
