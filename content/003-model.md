@@ -60,7 +60,7 @@ Jika kita kelompokkan berdasar jenisnya, maka potongan kode di atas memiliki pol
 
 Sejatinya tidak ada yang salah dengan cara penulisan di atas, hanya saja terlihat "berserakan".
 
-Bukankah lebih bagus jika kita bisa mengelompokkan *method* yang sejenis? *Relationship* berdekatan dengan *relationship*, *scope* berdekatan dengan *scope*, dan seterusnya. Dari contoh di atas, maka urutan penulisan yang lebih baik adalah:
+Sesuai prinsip pada bab 1 **"dekatkan yang sejenis"**, bukankah lebih bagus jika kita bisa mengelompokkan *method* sesuai jenisnya? *Relationship* berdekatan dengan *relationship*, *scope* berdekatan dengan *scope*, dan seterusnya. Dari contoh di atas, maka urutan penulisan yang lebih baik adalah:
 
 - relationship
 - relationship
@@ -178,6 +178,48 @@ Kebiasaan baik tidak cukup hanya dengan niat. Perlu **"fasilitas"** agar kebiasa
 > Semakin sering mengerjakan proyek, maka kita akan semakin pintar **mengenali pola**. Temukan mana pola yang cocok buat kamu dan tim.
 
 ## Encapsulation Dengan Accessor
+
+Enkapsulasi adalah salah prinsip dalam *Object Oriented Programming* dimana kita dilarang untuk mengakses secara langsung *property* sebuah *object*. Jika butuh sesuatu dari *object* tersebut, silakan panggil *method* yang sudah disediakan. 
+
+```php
+public function getFullnameAttribute()
+{
+    return $this->firstname.' '.$this->lastname;
+}
+```
+
+*Method* `getFullnameAttribute` di atas adalah contoh enkapsulasi. 
+
+Alih-alih memanggil kode berikut di setiap file Blade:
+
+```php+HTML
+<div>{{ $user>firstname.' '.$user->lastname }}</div>
+```
+
+Kita cukup memanggil:
+
+```php+HTML
+<div>{{ $user->fullname }}</div>
+```
+
+
+
+### Apa tujuannya?
+
+Agar ketika ada perubahan implementasi, si pemanggil *method* (atau biasa disebut *Client Class*) tidak ikut berubah. Jadi, selama *public method* nya masih sama, semua file atau *class* yang memanggil `getFullnameAttribute()` tidak perlu tahu apakah detil implementasinya berubah atau tidak. 
+
+Sebagai contoh, selain `firstname` dan `lastname`, sekarang seorang user juga punya atribut `middlename`. Tentu saja ini akan mengubah *logic* untuk mendapatkan `fullname`. Tapi karena kita sudah menerapkan enkapsulasi, perubahan tersebut cukup dilakukan di satu tempat saja:
+
+```php
+public function getFullnameAttribute()
+{
+    return $this->firstname.' '.$this->middlename.' '.$this->lastname;
+}
+```
+
+Semua kelas atau file Blade yang sudah terlanjur memanggil method `fullname` tidak perlu diubah. 
+
+Begitulah indahnya enkapsulasi.
 
 ## Mengganti Accessor Dengan Getter
 

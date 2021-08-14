@@ -610,7 +610,7 @@ Kata kuncinya adalah **mental model**. Bagaimana kita mau memodelkan aplikasi. B
 
 Sejauah ini sudah ada tiga prinsip penting yang kita ketahui untuk bisa menulis kode yang rapi dan manusiawi:
 1. Memecah yang besar menjadi kecil.
-2. Dekatkan yang saling membutuhkan.
+2. Dekatkan yang saling membutuhkan atau yang sejenis
 3. Beri petunjuk untuk hal  _**magic**_.
 
 Prinsip diatas bisa diterapkan untuk semua bahasa pemrograman dan _framework_.
