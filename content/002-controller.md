@@ -473,7 +473,78 @@ Beberapa contoh aksi yang cocok dijadikan *single action controller* antara lain
 
 ## Dimana Pengecekan Hak Akses?
 
-## FormRequest Yang Terabaikan
+## Form Request Yang Terabaikan
+
+Di bawah ini adalah tipikal kode yang sering kita jumpai. Sembilan baris kode untuk melakukan validasi form. Tentu bisa lebih jika *field* yang harus divalidasi semakin banyak. 
+
+```php
+class PostController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('post/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        // Store the blog post...
+    }
+}
+```
+
+Sebagai pembaca kode, mungkin kita harus scroll bolak-balik dulu sampai menemukan fungsi utama dari method `store` di atas. Validasi juga penting, tapi bukan yang utama. Ketika porsi penulisannya menjadi dominan, maka ada baiknya jika validasi form ini kita pindahkan ke tempat yang semestinya.
+
+Biasakan membuat satu`Form Request` untuk setiap form. Kita bisa memanfaatkan Artisan CLI:
+
+```bash
+php artisan make:request Post/StoreRequest
+```
+
+Lalu memindahkan kode terkait validasi dari Controller ke class Request yang baru:
+
+```php
+<?php
+
+namespace App\Http\Requests\Post;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreRequest extends FormRequest
+{
+    public function rules()
+    {
+        return [
+            'title' => 'required|unique:posts|max:255',
+            'body' => 'required',
+        ];
+    }
+}
+
+```
+
+Langkah terakhir, mengubah method `store` di Controller agar *typehint*-nya merujuk ke class `StoreRequest`:
+
+```php
+use App\Http\Requests\Post\StoreRequest;
+
+class PostController extends Controller
+{
+    public function store(StoreRequest $request)
+    {
+        \App\Models\Post::create($request->validated());
+        
+        return redirect()->back()->with('success', 'Post saved');
+    }
+}
+```
+
+Method Controller kita sekarang menjadi lebih langsing dan ***to the point***, dengan tidak ada fungsionalitas yang dikurangi. Validasi form tetap jalan, hanya kita pindahkan saja kodenya.
 
 ## Jangan Percaya User!
 

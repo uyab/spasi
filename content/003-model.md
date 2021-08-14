@@ -91,9 +91,11 @@ class User extends Model
 
 Selanjutnya, kita cukup membuat Trait baru untuk masing-masing jenis *method*.
 
-###### app/Models/Traits/UserRelationship.php
+
 
 ```php
+// app/Models/Traits/UserRelationship.php
+
 trait UserRelationship
 {
     public function profile()
@@ -104,9 +106,11 @@ trait UserRelationship
 }
 ```
 
-###### app/Models/Traits/UserScope.php
+
 
 ```php
+// app/Models/Traits/UserScope.php
+
 trait UserScope
 {
     public function scopeIdle($query)
@@ -117,9 +121,11 @@ trait UserScope
 }
 ```
 
-###### app/Models/Traits/UserAccessor
+
 
 ```php
+// app/Models/Traits/UserAccessor.php
+
 trait UserAccessor
 {
     public function getFullnameAttribute()
@@ -130,9 +136,11 @@ trait UserAccessor
 }
 ```
 
-###### app/Models/Traits/UserMutator.php
+
 
 ```php
+// app/Models/Traits/UserMutator.php
+
 trait UserMutator
 {
     public function setFirstnameAttribute($name)
