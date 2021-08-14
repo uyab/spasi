@@ -471,8 +471,6 @@ Beberapa contoh aksi yang cocok dijadikan *single action controller* antara lain
 
 
 
-## Dimana Pengecekan Hak Akses?
-
 ## Form Request Yang Terabaikan
 
 Di bawah ini adalah tipikal kode yang sering kita jumpai. Sembilan baris kode untuk melakukan validasi form. Tentu bisa lebih jika *field* yang harus divalidasi semakin banyak. 
@@ -500,7 +498,7 @@ class PostController extends Controller
 
 Sebagai pembaca kode, mungkin kita harus scroll bolak-balik dulu sampai menemukan fungsi utama dari method `store` di atas. Validasi juga penting, tapi bukan yang utama. Ketika porsi penulisannya menjadi dominan, maka ada baiknya jika validasi form ini kita pindahkan ke tempat yang semestinya.
 
-Biasakan membuat satu`Form Request` untuk setiap form. Kita bisa memanfaatkan Artisan CLI:
+Biasakan membuat satu `Form Request` untuk setiap form. Kita bisa memanfaatkan Artisan CLI:
 
 ```bash
 php artisan make:request Post/StoreRequest
@@ -554,10 +552,18 @@ Selain untuk validasi, class Form Request juga memiliki kegunaan yang lain, anta
 
 ## Jangan Percaya User!
 
-1. Input form
-1. Parameter URL
+Dua tempat utama dimana User bisa berinteraksi dengan aplikasi adalah:
+
+1. Input form.
+1. URL, baik hasil dari mengeklik sebuah menu atau mengetik secara manual di *address bar*.
 
 
+
+Umumnya validasi hanya dilakukan untuk form. Kita terbiasa menambahkan "required" untuk field yang tidak boleh null ketika akan disimpan di database.
+
+Sementara untuk URL, karena biasanya didapat dari sebuah link yang di-*generate* oleh aplikasi, seringkali kita asumsikan selalu valid. Padahal, sama seperti inputan pada form, URL yang tertulis di *address bar* juga bisa diubah oleh User.
+
+Kita ambil contoh URL dari sebuah halaman detil artikel:
 
 ```http
 http://localhost/post/8
@@ -580,9 +586,11 @@ class PostController extends Controller
 }
 ```
 
-Ingat, URL adalah kekuasaan User. Artinya, User bisa mengganti URL sesukanya (baik disengaja atau tidak). Pastikan ketika User mengetik URL yang aneh dan tidak masuk akal, aplikasi yang kita bikin tetap mampu menanganinya dan bukan menampilkan error 500. Idealnya, aplikasi menampilkan halaman **404 not found**, atau redirect ke halaman lain.
+Sekali lagi, URL adalah kekuasaan User. Artinya, User bisa mengganti URL sesukanya (baik disengaja atau tidak). Pastikan ketika User mengetik URL yang aneh dan tidak masuk akal, aplikasi yang kita bikin tetap mampu menanganinya dan bukan menampilkan error 500. Idealnya, aplikasi menampilkan halaman **404 not found**, atau redirect ke halaman lain.
 
 Coba cek kembali aplikasi yang sudah pernah Anda bikin. Buka sebuah halaman yang menampilkan *list of data*, lalu klik detail. Biasanya kita akan dibawa ke halaman baru dengan format URL yang mengandung parameter ID atau slug seperti di bawah ini:
+
+
 
 ```http
 http://localhost/post/99990
@@ -596,7 +604,7 @@ http://localhost/post/hello-world
 
 
 
-Atau kalau ingin melihat contoh nyata, silakan buka URL https://inaproc.id/berita, lalu pilih salah satu berita. Setelah itu, coba ubah URL-nya, misalnya: 
+Atau kalau ingin melihat contoh nyata, silakan buka URL https://inaproc.id/berita, lalu pilih salah satu berita. Setelah itu, coba sedikit iseng dengan mengubah URL-nya, misalnya: 
 
 ```http
 https://inaproc.id/berita/Aplikasi/Tingkatkan-Keamanan-Akun-Pengguna,-SPSE-Kini-ada-Fitur-Password-Meter
@@ -608,27 +616,13 @@ Diubah menjadi:
 https://inaproc.id/berita/Aplikasi/1234
 ```
 
-Apa yang ditampilkan oleh aplikasi? Halaman error atau halaman 404 ?
+Apa yang ditampilkan oleh aplikasi? Halaman error, halaman 404, atau redirect ke halaman lain dengan pesan yang manusiawi ?
 
-
-
-### Jangan Hanya Fokus ke Happy Case
-
-Contoh di atas adalah contoh dimana kita sebagai programmer hanya fokus ke *happy case* atau kasus ideal. Kasus dimana datanya valid, lingkungan atau resource mendukung, dan tidak ada orang iseng diluar sana.
-
-Dunia tidak seindah itu. 
-
-Pada prakteknya, banyak *edge case* atau *alternative case* yang harus di-*handle*, dimana hal tersebut juga merupakan tanggung jawab programmer.
-
-Jangan bergantung ke Analis atau Tester. Mulai sekarang, biasakan untuk sedikit "paranoid". 
-
-Bagaimana ya jika saya bikin input seperti ini? 
-
-Bagaimana ya jika filenya tidak terbaca? 
-
-Bagaimana ya jika koneksi API putus di tengah proses?
-
-Bagaimana ya jika database mati?
+> **Disclaimer**
+>
+> Saya ikut andil dalam pengembangan awal aplikasi inaproc.id di atas, 4 atau 5 tahun yang lalu. Ya, saya merasa 2M (muak dan malu) dengan kodingan saya sendiri. Konon katanya itu adalah salah satu ciri seorang programmer masih belajar dan berkembang :)
+>
+> Coba cek kembali kodingan kita: 3 bulan yang lalu, setahun yang lalu, atau bahkan 3 tahun yang lalu. Jika merasa baik-baik saja, mungkin "tempat main" kita "kurang jauh".
 
 ### Defensive Programming
 
@@ -677,18 +671,29 @@ Ketika tidak ada model Post dengan ID yang dimaksud, maka Laravel secara otomati
 
 https://laravel.com/docs/8.x/eloquent#not-found-exceptions
 
-## Intermeso: Tell, Don't Ask
 
-Sekarang malam minggu. Kamu baru saja selesai bermain futsal bersama teman-teman. Rasanya perut sangat lapar. Tapi karena sudah malam, sebagian besar penjual makanan sudah tutup, kecuali satu warung tenda Lamongan. Itupun nampak sudah tidak lengkap stok menunya.
 
-Kamu: nasinya masih, Mas?
+## Intermeso: Happy Case, Alternative Case, Edge Case
 
-Penjual: masih bang.
+Kasus terakhir adalah contoh dimana kita sebagai programmer hanya fokus ke *happy case* atau kasus ideal. Kasus dimana datanya valid, lingkungan atau resource mendukung, dan tidak ada orang iseng diluar sana.
 
-Lauknya tinggal apa?
+Dunia tidak seindah itu.
 
-Penjual: ayam sama lele
+Pada prakteknya, banyak *edge case* dan *alternative case* yang harus di-*handle*, dimana hal tersebut juga merupakan tanggung jawab programmer. Jangan hanya bergantung ke Analis untuk mendefinisikan semua kemungkinan buruk atau bergantung sepenuhnya ke Tester untuk mencari *bug* dari fitur yang kita koding. Mulai sekarang biasakan untuk sedikit "paranoid" sekaligus menanamkan *malicious mindset*. 
 
-### Referensi
+Bagaimana jika inputnya asal?
 
-- https://martinfowler.com/bliki/TellDontAsk.html
+Bagaimana jika ID yang dicari tidak ada di *database*? 
+
+Bagaimana jika struktur *array* tidak seperti yang kita harapkan?
+
+Bagaimana jika format sebuah string (misal JSON) tidak valid?
+
+Bagaimana jika filenya tidak terbaca? 
+
+Bagaimana jika koneksi API putus di tengah proses?
+
+Bagaimana jika, apapun penyebabnya, proses menyimpan ke database gagal?
+
+Pada awalnya, akan banyak validasi (dan `if`) yang perlu ditambahkan agar kode kita menjadi lebih *defensive*. Ujung-ujungnya membuat baris kode menjadi membengkak lagi. Seiring waktu dan pengalaman, kita akan menemukan banyak cara lain untuk menghapus `if`, misalnya dengan penerapan *typehint*, Data Transfer Object, atau Null Object.
+
