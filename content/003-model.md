@@ -531,7 +531,75 @@ Kode di atas tidak akan menghasilkan *error* meskipun `$user->profile` bernilai 
 
 ## Pasti Konsisten Dengan DB Transaction
 
-- contoh kasus: Update profile page
+Melanjutkan skenario User *has one* Profile sebelumya, anggaplah sekarang kita memiliki sebuah form registrasi yang cukup panjang, ala-ala website pemerintahan gitu lah ^_^.
 
-## Intermeso: Fat Model
+Ketika form tersebut di-*submit*, kita perlu menyimpannya ke dalam 2 tabel sekaligus: `users` dan `profiles`. Kira-kira kodenya seperti ini:
+
+```php
+class Register 
+{
+    public function __invoke(Request $request)
+    {
+        $user = new User;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->save();
+        
+        $profile = new Profile;
+        $profile->name = $request->name;
+        $profile->bio = $request->bio;
+        $user->profile()->save($profile);
+        
+        // show success message
+    }
+}
+```
+
+Pernah ya menulis kode seperti di atas?
+
+Kalaupun bukan User dan Profile, saya yakin kita semua sering membuat sebuah fungsi untuk melakukan beberapa operasi ke database sekaligus.
+
+Sekarang pertanyaannya, mungkinkah data user berhasil disimpan tetapi profilnya tidak tersimpan ke database?
+
+Jawabannya **sangat mungkin**.
+
+Bisa jadi ada kesalahan ketika proses menyimpan profil, terutama ketika proses *development*. Meskipun hanya data development, tetap saja memiliki data yang integritasnya tidak terjamin terasa tidak menyenangkan.
+
+Bisa jadi setelah memanggil `$user->save()`, tiba-tiba *server* down sehingga kode untuk menyimpan profil belum sempat dieksekusi. Peluangnya mungkin sangat kecil, tapi tetap saja mungkin terjadi :)
+
+Untuk kasus seperti itu, menerapkan *database transaction* merupakan pilihan yang tepat.
+
+```php
+use Illuminate\Support\Facades\DB;
+
+public function __invoke(Request $request)
+{
+    DB::transaction(function () {
+        $user = new User;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->save();
+
+        $profile = new Profile;
+        $profile->name = $request->name;
+        $profile->bio = $request->bio;
+        $user->profile()->save($profile);
+
+    });        
+}
+
+```
+
+Sekarang, hanya ada dua kemungkinan:
+
+1. Keduanya berhasil, sehingga integritas data terjaga.
+1. Atau, ketika salah satu gagal, maka proses yang lain otomatis akan dibatalkan. Dalam hal ini, integritas data juga tetap terjaga.
+
+Tidak ada lagi ceritanya berhasil menyimpan ke tabel `users` tapi gagal menyimpan ke tabel `profiles`.
+
+### Referensi
+
+- https://laravel.com/docs/8.x/database#database-transactions
+
+## Intermeso: Berdamai Dengan Eloquent
 
