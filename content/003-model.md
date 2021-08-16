@@ -278,7 +278,123 @@ Dengan mengikuti standard seperti di atas, maka programmer yang membaca kode di 
 {{ $user->present_fullname }} // ada prefix "present", berarti ini bukan kolom, easy...
 ```
 
-Tentunya kamu bebas memberi aturan penamaan yang lain, yang penting konsisten dan mudah dimengerti.
+Tentunya kamu bebas memberi aturan penamaan yang lain, yang penting **konsisten dan mudah dimengerti**.
+
+## Bercerita Dengan Scope
+
+Anggaplah kita akan membuat sebuah halaman `popular-post` dengan spesifikasi:
+
+1. *Popular post* adalah artikel dengan **jumlah view lebih dari 1000** dan **jumlah comment lebih dari 100**.
+1. Hanya artikel yang **diterbitkan** dalam 2 hari terakhir yang bisa dianggap sebagai *popular post*.
+1. Artikel dengan jumlah **view terbanyak ditampilkan di awal**.
+1. Pengunjung bisa melakukan **pencarian berdasar judul dan isi artikel**.
+
+Tipikal kode yang akan dibuat di Controller biasanya seperti di bawah ini:
+
+```php
+class PopularPostController extends Controller
+{
+    public function index()
+    {
+        $query = Post::where('status', 'PUBLISHED')
+            ->where('published_at', '>', now()->subDays(2))
+            ->where('view_count', '>', 1000)
+            ->where('comment_count', '>', 100);
+
+        if ($keyword) {
+            $query->where(function ($query) use ($keyword) {
+                $query->where('post.title', 'like', '%'.$filter.'%')
+                      ->orWhere('post.content', 'like', '%'.$filter.'%');
+            });
+        }
+        
+        $posts = $query->orderByDesc('view_count')->paginate();
+
+        return view('popular-post.index', compact('posts'));
+    }
+}
+```
+
+Cukup familiar kan?
+
+Ada yang salah? 
+
+Tidak ada.
+
+Selama fiturnya berfungsi dan tidak ada bug, maka kode bisa dianggap benar. Tapi, selalu ada cara untuk memperbaiki kode, menyiapkan kode hari ini agar mudah dipahami oleh orang lain di masa yang akan datang.
+
+### Bayangkan Outline-nya
+
+Untuk contoh kasus di atas, kita bisa memanfaatkan [Query Scopes](https://laravel.com/docs/8.x/eloquent#query-scopes) untuk memindahkan *logical block* yang berdekatan (sejenis) dari Controller ke Model.
+
+Coba kita bandingkan kode sebelumnya dengan kode di bawah ini. Menurutmu mana yang sekilas lebih mudah dipahami?
+
+```php
+class PopularPostController extends Controller
+{
+    public function index()
+    {
+        $posts = Post::query()
+            ->published()
+            ->popular()
+            ->filterByKeyword($keyword)
+            ->paginate();
+
+        return view('popular-post.index', compact('posts'));
+    }
+}
+```
+
+Controller yang sebelumnya berisi barisan kode prosedural yang harus kita pahami setiap barisnya, sekarang berubah hanya berisi *outline* atau **petunjuk** saja. Dari sini, kita bisa dengan mudah melanjutkan mau "membuka" *method* yang mana. Butuh melakukan perbaikan terkait pencarian, tinggal buka *method* `scopeFilterByKeyword` di model `Post`.
+
+Keuntungan lain, kita bisa dengan mudah menerapkan fungsionalitas yang sama di tempat lain. Butuh fitur pencarian di halaman admin? Cukup panggil `->filterByKeyword()`. 
+
+*Don't Repeat Yourself!*
+
+### Implementasi Scope-nya
+
+Setelah kita bisa membuat *outline*-nya , langkah berikutnya tentu saja tinggal membuat *scope* dan memindahkan *logical block* yang sebelumnya berada di Controller.
+
+```php
+class Post extends Model
+{
+    public function scopePopular($query)
+    {
+        return $query
+            ->where('published_at', '>', now()->subDays(2))
+            ->where('view_count', '>', 1000)
+            ->where('comment_count', '>', 100)
+            ->orderByDesc('view_count');
+    }
+    
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'PUBLISHED');
+    }
+
+    public function scopeFilterByKeyword($query, string $keyword)
+    {
+        // Validasi $keyword bisa kita pindahkan ke scope, sehingga Controller tidak perlu ada "if" lagi
+        if (!$keyword) {
+            return $query;
+        }
+        
+        return $query->where(function ($query) use ($keyword) {
+                $query->where('post.title', 'like', '%'.$filter.'%')
+                      ->orWhere('post.content', 'like', '%'.$filter.'%');
+            });
+    }
+    
+}
+```
+
+Cukup mudah kan?
+
+Kita juga bisa mengoptimasi kode lebih jauh lagi, dengan memindahkan *method* terkait *scope* ke Trait tersendiri. Tapi hal tersebut opsional saja. Sesuaikan dengan kompleksitas aplikasi yang sedang kita kembangkan. Jangan sampai melakukan *premature optimization*.
+
+### Referensi
+
+https://laravel.com/docs/8.x/eloquent#query-scopes
 
 ## Berdamai Dengan Active Record
 
@@ -327,8 +443,6 @@ Semoga setelah membaca ini, kita dijauhkan dari memberi nama tabel yang tidak ma
 ### Referensi
 
 - https://laravel.com/docs/master/eloquent#table-names
-
-## Bercerita Dengan Scope
 
 ## Pasti Aman Dengan withDefault()
 
