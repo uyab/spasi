@@ -673,6 +673,143 @@ https://laravel.com/docs/8.x/eloquent#not-found-exceptions
 
 
 
+## Hadirkan Model Secara Otomatis: Route Model Binding
+
+Memanggil `findOrFail` bisa mengurangi *"noise"* dan melangsingkan Controller. Selanjutnya, jika ingin diet yang lebih brutal lagi, kita bahkan tidak perlu memanggil `findOrFail` sama sekali.
+
+Sekali lagi, Laravel memiliki cukup banyak "magic" untuk mengubah ID dari URL menjadi sebuah object Model secara otomatis, tanpa kita perlu melakukan *query* secara manual.
+
+Sebelum:
+
+```php
+// routes/web.php
+Route::get('post/{id}', [PostController::class, 'show']);
+
+// PostController
+public function show($id)
+{
+    $post = Post::findOrFail($id);
+
+    return view('post.show', compact('post'));
+}
+```
+
+
+
+Sesudah:
+
+```php
+// routes/web.php
+Route::get('post/{post}', [PostController::class, 'show']);
+
+// PostController
+public function show(\App\Models\Post $post)
+{
+    return view('post.show', compact('post'));
+}
+```
+
+Dengan mengubah penamaan parameter route dari `{id}` menjadi `{post}` dan menambahkan *type hint* variable `$post` di Controller, maka Laravel akan secara otomatis melakukan query untuk mendapatkan model `Post` sesuai parameter URL saat ini.
+
+Bagi kamu yang terbiasa dengan ***strict typing*** dan bisa berdamai dengan *magic* dari Laravel, metode penulisan di atas tentu jauh lebih ringkas dan membuat Controller lebih *straightforward*.
+
+
+
+### Referensi
+
+https://laravel.com/docs/8.x/routing#route-model-binding
+
+
+
+## Proteksi Dari Pintu Masuk Pertama: Route Constraints
+
+Melanjutkan bahasan tentang ***strict typing*** atau ***strong typed***, maka masih ada celah dari contoh-contoh kode sebelumnya terkait parameter URL.
+
+Kita berasumsi bahwa ID dari sebuah artikel (Post) adalah integer, karena kolom `id` di tabel `posts` tipenya juga *auto increment integer*. Lalu apa yang terjadi jika kita mengubah parameter URL menjadi bukan integer? 
+
+Contoh:
+
+```http
+localhost/post/xxx
+```
+
+Memakai MySQL atau MariaDB biasanya aman-aman saja. Tetapi jika dijalankan dengan PostgreSQL akan menimbulkan error:
+
+```sql
+Illuminate\Database\QueryException
+SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for integer: "abc" (SQL: select * from "posts" where "id" = abc limit 1)
+```
+
+Error terjadi karena PostgreSQL menerapkan ***strong typed***. Kolom `id` bertipe integer, maka ekspektasinya parameter yang diberikan juga integer.
+
+### (Bukan) Solusi: Menerapkan Typehint di Controller
+
+Ketika pertama kali menemukan kasus seperti ini, solusi pertama kali yang saya pikirkan adalah mengabaikan *Route Model Binding* dan kembali memanggil `findOrFail` secara manual. Untuk proteksinya, saya tambahkan *type hint* `int` ke parameter $id:
+
+```php
+// routes/web.php
+Route::get('post/{id}', [PostController::class, 'show']);
+
+// PostController
+public function show(int $id)
+{
+    $post = Post::findOrFail($id);
+
+    return view('post.show', compact('post'));
+}
+```
+
+Ternyata tidak berhasil.
+
+Yang ada justru *another error*:
+
+```
+TypeError
+App\Http\Controllers\PostController::show(): Argument #2 ($id) must be of type int, string given, called in /Volumes/Code/laravolt-sandbox/vendor/laravel/framework/src/Illuminate/Routing/Controller.php on line 54
+```
+
+PHP berharap *method* `show` dipanggil dengan parameter `int`, tapi ketika kita menemui url `localhost/post/xxx`, maka "xxx" tetap dianggap sebagai ***string***.
+
+### Solusi 2: Menerapkan Route Constraint
+
+Solusi yang lebih baik dan elegan adalah dengan melaukan proteksi sedini mungkin. Kita sudah paham bahwa ***routes*** merupakan pintu masuk utama ke aplikasi. Semua URL yang bisa diakses oleh User wajib didefinisikan terlebih dahulu di ***routes***.
+
+Ketika kita mendefinisian routes:
+
+```php
+Route::get('post/{id}', [PostController::class, 'show']);
+```
+
+Maka sebenarnya kita sedang bilang ke Laravel, tolong semua pola URL di bawah ini diteruskan ke `PostController@show`:
+
+```http
+localhost/post/1
+localhost/post/2
+localhost/post/999
+localhost/post/foo
+localhost/post/bar
+```
+
+Programmer punya kesadaran penuh bahwa `{id}` ini adalah sebuah angka (integer). Tetapi kalau kesadaran ini tidak dituangkan dalam bentuk kode, tidak dieksplisitkan, maka Laravel tidak akan pernah tahu. Buat Laravel, semua tulisan setelah `/post/` adalah `{id}`, tidak peduli *integer* atau bukan.
+
+Kabar baiknya, Laravel sudah menyediakan mekanisme yang sangat baik untuk menangani permasalahan di atas.
+
+Cukup tambahkan definisi `{id}` secara eksplisit ketika kita mendefinisian *routes*:
+
+```php
+Route::get('post/{id}', [PostController::class, 'show'])->where('id', '[0-9]+');
+
+// atau memakai method alias yang lebih manusiawi, 
+// jika kamu tidak familiar dengan regular expression
+Route::get('post/{id}', [PostController::class, 'show'])->whereNumber('id');
+```
+
+Dengan penambahan ini, maka pengecekan tipe atau pola parameter URL akan dilakukan di level *routes*. Controller cukup terima bersih parameter yang sudah valid tipe atau polanya.
+
+### Referensi
+
+https://laravel.com/docs/8.x/routing#parameters-regular-expression-constraints
+
 ## Intermeso: Happy Case, Alternative Case, Edge Case
 
 Kasus terakhir adalah contoh dimana kita sebagai programmer hanya fokus ke *happy case* atau kasus ideal. Kasus dimana datanya valid, lingkungan atau resource mendukung, dan tidak ada orang iseng diluar sana.

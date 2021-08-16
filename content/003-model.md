@@ -396,7 +396,7 @@ Kita juga bisa mengoptimasi kode lebih jauh lagi, dengan memindahkan *method* te
 
 https://laravel.com/docs/8.x/eloquent#query-scopes
 
-## Berdamai Dengan Active Record
+
 
 ## Pegawais? Penggunas? Saatnya "Break The Rules!"
 
@@ -445,6 +445,8 @@ Semoga setelah membaca ini, kita dijauhkan dari memberi nama tabel yang tidak ma
 - https://laravel.com/docs/master/eloquent#table-names
 
 ## Pasti Aman Dengan withDefault()
+
+- contoh kasus: User has one profile
 
 ## Intermeso: Fat Model
 
