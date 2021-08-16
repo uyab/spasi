@@ -1,5 +1,9 @@
 # Model
 
+Jika Controller menjadi tempat nongkrong, tempat yang paling sering disinggahi untuk ditulisi, maka biasanya Model menjadi *object* yang paling sering dipanggil. Ya, karena fungsinya sebagai "perantara" antara aplikasi dengan database, tidak heran jika pemanggilan Model bakal ditemui disana-sini.
+
+Oleh sebab itu, menjadi penting untuk "memelihara" Model agar tetap terlihat "ramping" dan mudah dipahami. Pada bab ini, kita akan melihat beberapa contohnya.
+
 ## Tetap Rapi Dengan Trait
 
 Ketika membahas Controller pada bab sebelumnya, kita sudah memanfaatkan Trait untuk menghindari duplikasi atau biasa disebut dengan *code reuse*. Pada prakteknya Trait juga bisa digunakan untuk keperluan yang lain, salah satunya adalah mengelompokkkan *method* yang sejenis.
@@ -601,5 +605,28 @@ Tidak ada lagi ceritanya berhasil menyimpan ke tabel `users` tapi gagal menyimpa
 
 - https://laravel.com/docs/8.x/database#database-transactions
 
-## Intermeso: Berdamai Dengan Eloquent
+## Intermeso: Berdamai Dengan Eloquent Model
 
+Ketika menyebut kata "Model" di Laravel, maka yang kita maksud adalah Eloquent Model. Eloquent sendiri merupakan sebuah Object-Relational Mapper (ORM) yang menjadi jembatan antara programmer dengan database. 
+
+Kita koding PHP dengan pendekatan OOP, sedangkan (kebanyakan) database memiliki karakteristik *relational* (familiar dengan istilah Relational Database Management System atau RDBMS?). Oleh sebab itu muncul konsep ORM, dimana kita berinteraksi dengan *relational database* melalui pendekatan *object*.
+
+```php
+// OOP
+$user = new User;
+$user->email = 'me@theboringstack.com';
+$user->save();
+
+// query yang dihasilkan RDBMS
+// insert into users (email) values ('me@theboringstack.com');
+```
+
+Eloquent sendiri menurut saya ibarat pisau bermata dua. Di satu sisi sangat memudahkan untuk berinteraksi dengan database, terutama dalam proses *insert*, *update*, *delete* atau *query* sederhana.
+
+Namun sisi lainnya bisa "menjerumuskan" ketika kita harus melakukan *query* atau pengambilan data yang cukup kompleks. Antara kodenya jadi susah dibaca (karena query yang kompleks tersebut harus diterjemahkan menjadi kode Eloquent yang sangat panjang dan *nested*) atau performanya jadi lambat.
+
+*So, knowing your tools!*
+
+Ada saatnya kita menyerah dan tidak memaksa **"harus"** Eloquent. 
+
+Ada kalanya *plain SQL query* lebih manusiawi untuk dipahami.
