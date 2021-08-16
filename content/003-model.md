@@ -390,7 +390,7 @@ class Post extends Model
 
 Cukup mudah kan?
 
-Kita juga bisa mengoptimasi kode lebih jauh lagi, dengan memindahkan *method* terkait *scope* ke Trait tersendiri. Tapi hal tersebut opsional saja. Sesuaikan dengan kompleksitas aplikasi yang sedang kita kembangkan. Jangan sampai melakukan *premature optimization*.
+Kita juga bisa mengoptimasi kode lebih jauh lagi, dengan memindahkan *method* terkait *scope* ke Trait tersendiri. Tapi hal tersebut opsional saja. Sesuaikan dengan kompleksitas aplikasi yang sedang kita kembangkan. Jangan sampai melakukan ***premature optimization***.
 
 ### Referensi
 
