@@ -446,7 +446,88 @@ Semoga setelah membaca ini, kita dijauhkan dari memberi nama tabel yang tidak ma
 
 ## Pasti Aman Dengan withDefault()
 
-- contoh kasus: User has one profile
+Seberapa sering kamu mendapatkan error **Trying to get property of non-object**?
+
+Contoh paling klasik penyebab error tersebut skenario **User *has one* Profile**, dengan contoh *relationship* seperti di bawah ini:
+
+```php
+class User extends Model
+{
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+}
+```
+
+Pada kondisi ideal, memanggil `$user->profile->bio` untuk menampilkan bio dari seorang *user* sepertinya aman-aman saja. Kita kan sudah mendefinisikan *relationship*-nya.
+
+Namun apa jadinya jika ternyata ada sebuah data di tabel `users` yang tidak ada relasinya di tabel `profiles`? Ada banyak hal yang bisa menjadi penyebabnya:
+
+1. Menyederhanakan proses registrasi, sehingga User tidak diminta untuk mengisi profile dari awal.
+1. *Legacy data* dari aplikasi lama dimana waktu itu belum ada isian profil User secara lengkap.
+1. Kesalahan koding, misalnya tidak menerapkan *database transaction*, sehingga menyebabkan rusaknya integritas data.
+
+Pada kasus-kasus di atas, memanggil `$user->profile->bio` jelas berpotensi menimbulkan error **Trying to get property of non-object**.
+
+Ketika kita tidak punya kuasa untuk memastikan **integritas data** di level basis data, maka mau tidak mau kita harus menerapkan kembali *defensive programming* di level kode. Dalam kasus ini, `withDefault` merupakan pilihan yang tepat.
+
+```php
+class User extends Model
+{
+    public function profile()
+    {
+        return $this->hasOne(Profile::class)->withDefault();
+    }
+}
+```
+
+Dengan penambahan `withDefault` seperti di atas, maka memanggil `$user->profile` dijamin tidak akan *return* `null`. Jika tidak ada data terkait User tersebut di tabel `profiles`, `$user->profile` akan tetap mengembalikan *object* `Profile`, hanya saja semua atributnya bernilai `null`.
+
+Jika ingin mengeset *default value* dari suatu atribut, kita bisa menambahkan:
+
+```php
+class User extends Model
+{
+    public function profile()
+    {
+        return $this->hasOne(Profile::class)->withDefault(['bio' => '-masih kosong-']);
+    }
+}
+```
+
+*Relationship* yang bisa ditambahkan `withDefault` adalah:
+
+1. belongsTo
+1. hasOne
+1. hasOneThrough
+1. morphOne
+
+Dokumentasi lengkap terkait `withDefault` bisa dibaca di https://laravel.com/docs/8.x/eloquent-relationships#default-models.
+
+### PHP 8.0: Null-Safe Operator
+
+Sejak PHP 8.0, kita bisa menghindari error "sejuta umat" tersebut dengan menerapkan operator `?->`:
+
+```php
+$user->profile?->bio;
+```
+
+Kode di atas tidak akan menghasilkan *error* meskipun `$user->profile` bernilai `null`. 
+
+> Ada banyak fitur baru sejak PHP 8.0 yang membuatnya terasa lebih modern. Kita akan membahasnya lebih mendalam di buku tersendiri :) 
+
+
+
+> Null Object merupakan salah satu *design pattern* yang bisa dimanfaatkan untuk menghindari pengecekan `if($foo !== null)` di banyak tempat.
+
+### Referensi
+
+- https://designpatternsphp.readthedocs.io/en/latest/Behavioral/NullObject/README.html
+- https://docs.php.earth/php/ref/oop/design-patterns/null-object/
+- https://php.watch/versions/8.0/null-safe-operator
+
+
 
 ## Pasti Konsisten Dengan DB Transaction
 
