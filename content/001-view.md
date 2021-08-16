@@ -615,9 +615,3 @@ Sejauah ini sudah ada tiga prinsip penting yang kita ketahui untuk bisa menulis 
 
 Prinsip diatas bisa diterapkan untuk semua bahasa pemrograman dan _framework_.
     
-
-## _Quote_
->{quote} " Any fool can write code that a computer can understand. <br> Good programmers write code that humans can understand. "
->
-><footer>Martin Fowler</footer>
-

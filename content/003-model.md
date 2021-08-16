@@ -448,5 +448,9 @@ Semoga setelah membaca ini, kita dijauhkan dari memberi nama tabel yang tidak ma
 
 - contoh kasus: User has one profile
 
+## Pasti Konsisten Dengan DB Transaction
+
+- contoh kasus: Update profile page
+
 ## Intermeso: Fat Model
 
