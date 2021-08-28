@@ -1,43 +1,93 @@
 <header>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/sunburst.min.css">
+  <style>
+    .hljs {
+      display: block;
+      overflow-x: auto;
+      padding: 0.5em;
+      background: #000000
+    }
+
+    .hljs, .hljs-subst, .hljs-tag, .hljs-title {
+      color: #CCCCCC
+    }
+
+    .hljs-strong, .hljs-emphasis {
+      color: #DDDDDD
+    }
+
+    .hljs-bullet, .hljs-quote, .hljs-number, .hljs-regexp, .hljs-literal {
+      color: #ff55ff
+    }
+
+    .hljs-code .hljs-selector-class {
+      color: #aaaaff
+    }
+
+    .hljs-emphasis, .hljs-stronge, .hljs-type {
+      font-style: italic
+    }
+
+    .hljs-keyword, .hljs-selector-tag, .hljs-function, .hljs-section, .hljs-symbol, .hljs-name {
+      color: #ffff55
+    }
+
+    .hljs-attribute {
+      color: #ffff55
+    }
+
+    .hljs-variable, .hljs-params, .hljs-class .hljs-title {
+      color: #8888ff
+    }
+
+    .hljs-string, .hljs-selector-id, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-type, .hljs-built_in, .hljs-builtin-name, .hljs-template-tag, .hljs-template-variable, .hljs-addition, .hljs-link {
+      color: #ff55ff
+    }
+
+    .hljs-comment, .hljs-meta, .hljs-deletion {
+      color: #55ffff
+    }
+  </style>
   <style>
     body {
-      font-family: calibri;
+      font-family: body;
       font-size: 14px;
-      line-height: 1.4;
-      background-color: #011627;
-      color: #c1d4ea;
+      line-height: 1.8;
+      background-color: #2b2431;
+      color: #FFFFFF;
     }
 
-    h1, h2 {
-      font-family: times;
-      color: #fff;
-    }
-
-    h3 {
-      font-family: calibri;
-      color: #fff;
-      font-weight: bold;
+    hr {
+      margin: 100px;
     }
 
     h1 {
-      font-size: 35px;
+      font-family: heading1;
+      font-size: 72px;
       padding-top: 0;
       padding-bottom: 70px;
     }
 
     h2 {
+      font-family: heading2;
       text-align: left;
-      font-size: 20px;
+      font-size: 32px;
+      line-height: 42px;
       padding-top: 0;
       padding-bottom: 30px;
     }
 
     h3 {
+      font-family: heading3;
       text-align: left;
-      font-size: 19px;
-      padding-top: 20px;
+      font-size: 20px;
+      padding-top: 40px;
       padding-bottom: 0;
+    }
+
+    h4 {
+      font-size: 16px;
+      font-family: heading4;
+      padding-top: 20px;
     }
 
     p, ul, ol {
@@ -47,7 +97,8 @@
     pre {
       line-height: 20px;
       page-break-inside: avoid;
-      border-left: solid 5px #EABC65;
+      background: none;
+      border-radius: 8px;
       padding-top: 15px;
       padding-bottom: 15px;
       padding-left: 20px;
@@ -55,23 +106,28 @@
     }
 
     a {
-      color: #abe9ef;
+      text-decoration: none;
+      color: #FFFFFF;
+      border-bottom: 1px solid #6CD1F5;
     }
 
     pre code {
       background: none;
-      font-size: 13px;
-      color: #abe9ef;
+      font-size: .8em;
+      font-family: monospace;
+      line-height: 18px;
     }
 
     code {
-      font-size: 14px;
-      color: #EABC65;
+      font-size: .9em;
+      color: #FEFE55;
     }
 
+    img {
+      border-radius: 8px;
+    }
     .mpdf_toc {
-      font-family: calibri;
-      color: #c1d4ea;
+      font-family: body;
     }
 
     div.mpdf_toc_level_0 {
@@ -87,101 +143,106 @@
       line-height: 30px;
     }
 
+    span.mpdf_toc_t_level_0 {
+      font-size: 24px;
+      font-family: heading1;
+    }
+
     span.mpdf_toc_t_level_0, span.mpdf_toc_p_level_0 {
-      color: #c1d4ea;
-      font-family: calibri;
       font-weight: bold;
       font-style: normal;
+      color: #FFFFFF;
     }
 
     span.mpdf_toc_t_level_1, span.mpdf_toc_p_level_1 {
-      color: #c1d4ea;
-      font-family: calibri;
+      color: #FFFFFF;
+      font-family: body;
       font-weight: normal;
       font-style: normal;
     }
 
     span.mpdf_toc_t_level_2, span.mpdf_toc_p_level_2 {
-      color: #c1d4ea;
-      font-family: calibri;
+      font-family: body;
       font-weight: normal;
       font-style: normal;
     }
 
     #toc-title {
-      font-weight: bold;
       font-size: 45px;
-      padding-top: 0;
-      padding-bottom: 10px;
+      letter-spacing: 1px;
+      padding-top: 50px;
+      padding-bottom: 50px;
       text-align: center;
     }
 
     blockquote {
-      margin-top: 0;
+      margin-top: 40px;
       margin-right: 0;
       margin-bottom: 30px;
       margin-left: 0;
       page-break-inside: avoid;
+      color: #ffabfb;
+      border-radius: 8px;
+      font-size: .9em;
+      padding-top: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      background-color: #2b2431;
+      background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23141315' fill-opacity='0.66'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
 
     blockquote p {
       margin-top: 0;
-      margin-bottom: 0;
+      margin-bottom: 20px;
     }
 
     blockquote.quote {
-      padding-top: 20px;
-      padding-bottom: 20px;
-      padding-left: 20px;
-      padding-right: 20px;
-      font-style: italic;
+      font-family: quote;
+      padding: 70px 0;
+      margin-top: 200px;
+      text-align: center;
+      border: 0 none;
     }
 
-    blockquote.notice {
-      border-left: solid 5px #5b87dd;
-      padding-top: 20px;
-      padding-bottom: 20px;
-      padding-left: 20px;
-      padding-right: 20px;
+    blockquote.quote footer {
+      font-weight: bold;
     }
 
-    blockquote.notice strong {
-      color: #5b87dd;
-    }
-
-    blockquote.warning {
-      border-left: solid 5px #dd787d;
-      padding-top: 20px;
-      padding-bottom: 20px;
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    blockquote.warning strong {
-      color: #dd787d;
-    }
-    
     table {
-      border-collapse: collapse;
+      border-radius: 8px;
       width: 100%;
+      margin-bottom: 20px;
     }
 
     td, th {
-      border: 1px solid #ddd;
-      padding: 8px;
+      padding: 12px 15px;
+      font-size: .8em;
     }
 
-    tr:nth-child(even){
-      background-color: #113e63;
-      color: #011627;
+    tr:nth-child(even) {
+      background-color: #111111;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #1818181;
     }
 
     th {
       padding-top: 12px;
       padding-bottom: 12px;
-      text-align: left;
-      background-color: #001321;
-      color: white;
+      color: #ffabfb;
+      background: none;
+      text-transform: uppercase;
+      font-size: .8em;
+      text-align: center;
+    }
+
+    td:last-child {
+      /*border-bottom: 1px solid #5e3e9b;*/
+    }
+
+    del {
+      text-decoration: line-through;
     }
   </style>
 
