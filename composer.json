@@ -1,0 +1,5 @@
+{
+    "require": {
+        "themsaid/ibis": "^0.1.4"
+    }
+}
