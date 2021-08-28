@@ -4,7 +4,7 @@ return [
     /**
      * The book title.
      */
-    'title' => 'Spasi di Bulan Juli',
+    'title' => 'Spasi',
 
     /**
      * The author name.
@@ -58,6 +58,6 @@ return [
     /**
      * A notice printed at the final page of a generated sample.
      */
-    'sample_notice' => 'Ini adalah contoh isi buku "Spasi di Bulan Juli" oleh Uyab. <br> 
+    'sample_notice' => 'Ini adalah contoh isi buku "Spasi" oleh Uyab. <br> 
                         <a href="https://theboringstack.com/">Klik disini untuk info lengkap</a>.',
 ];

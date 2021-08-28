@@ -176,11 +176,12 @@ _Mengoplos_ kode PHP dan Javascript seperti contoh di atas setidaknya memiliki d
 1. Jika suatu ketika kamu ingin memindahkan semua  _script_ dari file Blade ke satu file `js`, maka tidak bisa dilakukan secara langsung karena fungsi `route()` tidak akan dikenali di file `js`. Harus di-_refactor_ dulu.
 
 Ketika kebutuhan aplikasi mengharuskan adanya interaksi antara kode Blade(PHP) dan Javascript,  ada dua cara yang bisa dilakukan agar hubungan tersebut bisa langgeng dalam jangka panjang (mudah di-_maintain_):
+
 1. Passing sebagai data-attribute
-2. Definisikan _dynamic variable_ di awal kode
+1. Definisikan _dynamic variable_ di awal kode
 
-
-> Sekedar mengingatkan, kode `url: {{ route('comment.store') }}` di atas salah karena kurang tanda petik. Kode yang benar seharusnya `url: "{{ route('comment.store') }}"`
+> Sekedar mengingatkan, kode `url: {{ route('comment.store') }}` di atas salah karena kurang tanda petik. 
+> Kode yang benar seharusnya `url: "{{ route('comment.store') }}"`
 
 
 ### Passing Variable Sebagai Atribut HTML data-*
