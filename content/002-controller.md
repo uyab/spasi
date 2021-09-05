@@ -143,18 +143,20 @@ public function store(Request $request)
 
 protected function uploadCover($request)
 {
-  $cover = null;
+    $cover = null;
 
-  if ($request->file('cover')) {
-    $file = $request->file('cover');
-    $dt = Carbon::now();
-    $acak  = $file->getClientOriginalExtension();
-    $fileName = rand(11111,99999).'-'.$dt->format('Y-m-d-H-i-s').'.'.$acak; 
-    $request->file('cover')->move("images/buku", $fileName);
-    $cover = $fileName;
-  }
-
-  return $cover;
+    if ($request->file('cover')) {
+        $file = $request->file('cover');
+        $dt = Carbon::now();
+        $acak  = $file->getClientOriginalExtension();
+        $fileName = rand(11111,99999).'-'
+            .$dt->format('Y-m-d-H-i-s').'.'
+            .$acak; 
+        $request->file('cover')->move("images/buku", $fileName);
+        $cover = $fileName;
+    }
+    
+    return $cover;
 }
 ```
 
@@ -165,15 +167,13 @@ Jika proses validasi form dan proses menyimpan ke database dirasa cukup kompleks
 ```php
 public function store(Request $request)
 {
-  $this->validateBuku($request);  
-
-  $cover = $this->uploadCover($request);
-  
-  $buku = $this->storeBuku($request, $cover);
-
-  alert()->success('Berhasil.','Data telah ditambahkan!');
-
-  return redirect()->route('buku.index');
+    $this->validateBuku($request);  
+    $cover = $this->uploadCover($request);
+    $buku = $this->storeBuku($request, $cover);    
+    
+    alert()->success('Berhasil.','Data telah ditambahkan!');
+    
+    return redirect()->route('buku.index');
 }
 ```
 
@@ -190,15 +190,13 @@ Kelebihan lain dari *protected method* adalah *reusable*, yaitu kita bisa menggu
 ```php
 public function update(Request $request)
 {
-  $this->validateBuku($request);  
-
-  $cover = $this->uploadCover($request);
-  
-  $buku = $this->updateBuku($request, $cover);
-
-  alert()->success('Berhasil.','Data telah diubah!');
-
-  return redirect()->route('buku.index');
+    $this->validateBuku($request);  
+    $cover = $this->uploadCover($request);
+    $buku = $this->updateBuku($request, $cover);
+    
+    alert()->success('Berhasil.','Data telah diubah!');
+    
+    return redirect()->route('buku.index');
 }
 ```
 
@@ -216,9 +214,9 @@ class BukuController extends Controller
 {
     public function store(Request $request)
     {
-      ...
+      // ...
       $cover = $this->uploadCover($request);
-      ...      
+      // ...
     }
 }
 
@@ -226,9 +224,9 @@ class PublicBukuController extends Controller
 {
     public function store(Request $request)
     {
-      ...
+      // ...
       $cover = $this->uploadCover($request);
-      ...      
+      // ...
     }  
 }
 ```
@@ -285,9 +283,9 @@ class BukuController extends Controller
     
     public function store(Request $request)
     {
-      ...
+      // ...
       $cover = $this->uploadCover($request);
-      ...      
+      // ...
     }
 }
 
@@ -297,9 +295,9 @@ class PublicBukuController extends Controller
     
     public function store(Request $request)
     {
-      ...
+      // ...
       $cover = $this->uploadCover($request);
-      ...      
+      // ...
     }  
 }
 ```

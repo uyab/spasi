@@ -1,59 +1,44 @@
 <header>
-  <link rel="stylesheet" href="//spasi.dev/assets/css/ibis.css">
   <style>
-    .hljs {
-      display: block;
+    /*
+     Margin and rounding are personal preferences,
+     overflow-x-auto is recommended.
+    */
+    pre {
+      page-break-inside: avoid;
+      margin-bottom: 30px;
+      border-radius: 5px;
       overflow-x: auto;
-      padding: 0.5em;
-      background: #000000
+      font-size: .9em;
+      line-height: 1.75em;
+      padding: .5cm 0 .5cm .5cm;
     }
 
-    .hljs, .hljs-subst, .hljs-tag, .hljs-title {
-      color: #CCCCCC
+    /*
+     Add some vertical padding and expand the width
+     to fill its container. The horizontal padding
+     comes at the line level so that background
+     colors extend edge to edge.
+    */
+    pre code.torchlight {
+      padding-top: 16px;
+      padding-bottom: 16px;
     }
 
-    .hljs-strong, .hljs-emphasis {
-      color: #DDDDDD
+    /*
+     Horizontal line padding to match the vertical
+     padding from the code block above. Vertical
+     for line height.
+    */
+    pre code.torchlight .line {
+      padding: 2px 16px;
     }
 
-    .hljs-bullet, .hljs-quote, .hljs-number, .hljs-regexp, .hljs-literal {
-      color: #ff55ff
-    }
-
-    .hljs-code .hljs-selector-class {
-      color: #aaaaff
-    }
-
-    .hljs-emphasis, .hljs-stronge, .hljs-type {
-      font-style: italic
-    }
-
-    .hljs-keyword, .hljs-selector-tag, .hljs-function, .hljs-section, .hljs-symbol, .hljs-name {
-      color: #ffff55
-    }
-
-    .hljs-attribute {
-      color: #ffff55
-    }
-
-    .hljs-variable, .hljs-params, .hljs-class .hljs-title {
-      color: #8888ff
-    }
-
-    .hljs-string, .hljs-selector-id, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-type, .hljs-built_in, .hljs-builtin-name, .hljs-template-tag, .hljs-template-variable, .hljs-addition, .hljs-link {
-      color: #ff55ff
-    }
-
-    .hljs-comment, .hljs-meta, .hljs-deletion {
-      color: #55ffff
-    }
-  </style>
-  <style>
     body {
       font-family: body;
       font-size: 14px;
       line-height: 1.8;
-      background-color: #2b2431;
+      background-color: #161926;
       color: #FFFFFF;
     }
 
@@ -95,17 +80,6 @@
       margin-bottom: 20px;
     }
 
-    pre {
-      line-height: 20px;
-      page-break-inside: avoid;
-      background: none;
-      border-radius: 8px;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      padding-left: 20px;
-      margin-bottom: 30px;
-    }
-
     a {
       text-decoration: none;
       color: #FFFFFF;
@@ -113,12 +87,9 @@
     }
 
     pre code {
-      background: none;
       font-size: .8em;
-      font-family: monospace;
       line-height: 18px;
     }
-
     code {
       font-size: .9em;
       color: #FEFE55;

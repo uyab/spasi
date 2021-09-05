@@ -247,11 +247,11 @@ Jika karena suatu hal metode sebelumnya tidak bisa diterapkan, maka opsi lainnya
 
 <script>
 
-<!-- Area transisi, serah terima antara Blade dan Javascript -->
+// Area transisi, serah terima antara Blade dan Javascript
 const URL = '{{ route('comment.store') }}';
 const sampleData = @json($dataFromController);
 
-<!-- Setelah ini full Javascript, tidak ada lagi oplosan -->
+// Setelah ini full Javascript, tidak ada lagi oplosan
 $('#buttonSubmitComment').on('click', function(e) {
     e.preventDefault();
     
