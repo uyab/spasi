@@ -3,8 +3,8 @@
 return [
     // Which theme you want to use. You can find all of the themes at
     // https://torchlight.dev/themes.
-    // 'theme' => 'serendipity-light',
-    'theme' => 'dark-404',
+    'theme' => 'serendipity-light',
+    // 'theme' => 'dark-404',
 
     // Your API token from torchlight.dev. You can set it as an ENV variable
     // (shown below), or just hardcode it if your repo is private.
