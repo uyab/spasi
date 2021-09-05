@@ -196,13 +196,13 @@ public function getFullnameAttribute()
 
 Alih-alih memanggil kode berikut di setiap file Blade:
 
-```php+HTML
+```blade
 <div>{{ $user>firstname.' '.$user->lastname }}</div>
 ```
 
 Kita cukup memanggil:
 
-```php+HTML
+```blade
 <div>{{ $user->fullname }}</div>
 ```
 
@@ -276,7 +276,7 @@ class User extends Model {
 
 Dengan mengikuti standard seperti di atas, maka programmer yang membaca kode di bawah ini bisa langsung paham bahwa `present_fullname` bukanlah sebuah kolom, tapi sebuah **accessor**.
 
-```php
+```blade
 {{ $user->name }} // Ok, saya tahu "name" adalah sebuah kolom di database
 {{ $user->email }} // begitu juga email
 {{ $user->present_fullname }} // ada prefix "present", berarti ini bukan kolom, easy...
@@ -513,7 +513,7 @@ Dokumentasi lengkap terkait `withDefault` bisa dibaca di https://laravel.com/doc
 
 Sejak PHP 8.0, kita bisa menghindari error "sejuta umat" tersebut dengan menerapkan operator `?->`:
 
-```php
+```blade
 $user->profile?->bio;
 ```
 

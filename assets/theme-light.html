@@ -1,85 +1,41 @@
 <header>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.13.1/build/styles/sunburst.min.css">
     <style>
-        .hljs {
-            display: block;
+        /*
+         Margin and rounding are personal preferences,
+         overflow-x-auto is recommended.
+        */
+        pre {
+            page-break-inside: avoid;
+            margin-bottom: 30px;
+            border-radius: 5px;
             overflow-x: auto;
-            padding: 0.5em;
-            background: #fff;
-            color: black
+            font-size: .9em;
+            line-height: 1.75em;
+            background: #FAFAFA;
+            padding: .5cm;
         }
 
-        .xml .hljs-meta {
-            color: #c0c0c0
+        /*
+         Add some vertical padding and expand the width
+         to fill its container. The horizontal padding
+         comes at the line level so that background
+         colors extend edge to edge.
+        */
+        pre code.torchlight {
+            padding-top: 16px;
+            padding-bottom: 16px;
         }
 
-        .hljs-comment, .hljs-quote {
-            color: #007400
+        /*
+         Horizontal line padding to match the vertical
+         padding from the code block above. Vertical
+         for line height.
+        */
+        pre code.torchlight .line {
+            padding: 2px 16px;
         }
 
-        .hljs-tag, .hljs-attribute, .hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-name {
-            color: #5c2699
-        }
 
-        .hljs-variable, .hljs-template-variable {
-            color: #3F6E74
-        }
-
-        .hljs-code, .hljs-string, .hljs-meta-string {
-            color: #678
-        }
-
-        .hljs-regexp, .hljs-link {
-            color: #5c2699
-        }
-
-        .hljs-title, .hljs-symbol, .hljs-bullet, .hljs-number {
-            color: #1c00cf
-        }
-
-        .hljs-section, .hljs-meta {
-            color: #643820
-        }
-
-        .hljs-class .hljs-title, .hljs-type, .hljs-built_in, .hljs-builtin-name, .hljs-params {
-            color: #5c2699
-        }
-
-        .hljs-attr {
-            color: #8751AA
-        }
-
-        .hljs-subst {
-            color: #000
-        }
-
-        .hljs-formula {
-            background-color: #eee;
-            font-style: italic
-        }
-
-        .hljs-addition {
-            background-color: #baeeba
-        }
-
-        .hljs-deletion {
-            background-color: #ffc8bd
-        }
-
-        .hljs-selector-id, .hljs-selector-class {
-            color: #9b703f
-        }
-
-        .hljs-doctag, .hljs-strong {
-            font-weight: bold
-        }
-
-        .hljs-emphasis {
-            font-style: italic
-        }
-    </style>
-    <style>
         body {
             font-family: body;
             font-size: 14px;
@@ -125,17 +81,6 @@
             margin-bottom: 20px;
         }
 
-        pre {
-            line-height: 20px;
-            page-break-inside: avoid;
-            background-color: #f9f9fb;
-            border-radius: 8px;
-            padding-top: 15px;
-            padding-bottom: 15px;
-            padding-left: 20px;
-            margin-bottom: 30px;
-        }
-
         a {
             color: #222222;
             text-decoration: none;
@@ -152,7 +97,7 @@
 
         code {
             font-size: .9em;
-            color: #8751AA;
+            color: #5a32ab;
         }
 
         .mpdf_toc {

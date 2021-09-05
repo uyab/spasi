@@ -22,7 +22,7 @@ Bayangkan kamu mendapat tugas untuk membuat dashboard dengan mockup seperti di b
 
 Pada umumnya, tampilan di atas akan diimplementasi menjadi satu file blade seperti berikut:
 
-```php
+```blade
 @extends('layout')
 
 @section('content')
@@ -57,7 +57,7 @@ Setelah mengetahui komponen penyusun halaman dashboard tersebut, langkah berikut
 3. `_popularPost.blade.php`
 
 Lalu, kamu cukup memanggil tiap komponen dengan **@include**:
-```php
+```blade
 @extends('layout')
 
 @section('content')
@@ -95,7 +95,7 @@ Anggap kita sedang mengerjakan aplikasi menggunakan Bootstrap. Lalu tampilan yan
 ![](http://spasi.test/assets/img/grid.png)
 
 Jika tidak hati-hati, maka _view_ yang kamu buat akan seperti ini:
-```html
+```blade
 <div class="container">
   <div class="row">
     @include('_weather')
@@ -116,7 +116,7 @@ Kita kehilangan informasi tentang susunan grid.  Melihat kode seperti di atas, s
 
 Cara yang lebih baik adalah dengan meng-**eksplisit**-kan struktur grid di _view_ utama.
 
-```html
+```blade
 <div class="container">
   <div class="row">
     <div class="col-sm-4">
@@ -147,7 +147,7 @@ Sekarang terlihat dengan jelas bahwa halaman di atas terbagi menjadi 3 kolom. De
 ## Tidak Menyisipkan Blade Ke Dalam Javascript
 Mengembangkan aplikasi web tidak bisa lepas dari Javascript. Begitu juga dengan aplikasi Laravel yang dikembangkan secara _fullstack_.
 
-```html
+```blade
 <section>
     <button id="buttonSubmitComment">Kirim Komentar</button>
 </section>
@@ -168,10 +168,10 @@ $('#buttonSubmitComment').on('click', function(e) {
 _Mengoplos_ kode PHP dan Javascript seperti contoh di atas setidaknya memiliki dua kekurangan:
 1. Membaca 2 _syntax_ dari 2 bahasa yang berbeda dalam satu blok kode yang sama akan sedikit merepotkan otak (_context switching_) dan berpotensi menimbulkan kesalahan dasar ketika menulisnya.
 
-    ```javascript
-     url: {{ route('comment.store') }},
-    ```
-    Berapa detik yang kamu butuhkan untuk menyadari bahwa potongan kode di atas salah secara sintaksis?
+```javascript
+    url: {{ route('comment.store') }},
+```
+Berapa detik yang kamu butuhkan untuk menyadari bahwa potongan kode di atas salah secara sintaksis?
 
 1. Jika suatu ketika kamu ingin memindahkan semua  _script_ dari file Blade ke satu file `js`, maka tidak bisa dilakukan secara langsung karena fungsi `route()` tidak akan dikenali di file `js`. Harus di-_refactor_ dulu.
 
@@ -188,9 +188,11 @@ Ketika kebutuhan aplikasi mengharuskan adanya interaksi antara kode Blade(PHP) d
 
 Alih-alih mencampur Blade dan Javascript, kamu bisa memanfaatkan atribut HTML `data-*` untuk mem-_passing_ sebuah value yang berasal dari PHP agar bisa dibaca oleh Javascript.
 
-```html
+```blade
 <section>
-    <button id="buttonSubmitComment" data-url="{{ route('comment.store') }}">Kirim Komentar</button>
+    <button id="buttonSubmitComment" data-url="{{ route('comment.store') }}">
+        Kirim Komentar
+    </button>
 </section>
 
 <!-- End of Blade here -->
@@ -237,7 +239,7 @@ Contohnya sama seperti saat kamu membaca buku ini. Setiap selesai satu bagian ka
 
 Jika karena suatu hal metode sebelumnya tidak bisa diterapkan, maka opsi lainnya adalah dengan mendefinisikan semua variabel di awal dengan _keyword_ `let` ataupun `const`.
 
-```html
+```blade
 <section>
     <button id="buttonSubmitComment">Kirim Komentar</button>
 </section>
@@ -279,7 +281,7 @@ Sekarang ada kebutuhan, setiap kali Popular Post diklik akan muncul modal yang b
 
 Kode yang ditulis biasanya seperti di bawah ini:
 
-```html
+```blade
 @extends('layout')
 
 @section('content')
@@ -316,7 +318,7 @@ Lalu bagaimana solusi yang lebih manusiawi?
 
 Untuk setiap sub view membutuhkan kode Javascript, maka kodenya cukup ditulis di masing-masing sub view tersebut.
 
-```html
+```blade
 <!-- dashboard.blade.php -->
 @extends('layout')
 
@@ -363,7 +365,8 @@ Terkadang ada kode Javascript yang berhubungan dengan beberapa atau bahkan semua
 Contoh, dengan mockup dashboard yang sama, perlu ditambahkan sebuah filter tahun yang ketika diubah akan me-refresh ketiga sub view sekaligus.
 
 Versi kode yang  manusiawi adalah seperti berikut:
-```html
+
+```blade
 <!-- dashboard.blade.php -->
 @extends('layout')
 
@@ -407,7 +410,7 @@ Dengan menambahkan `data-role="foo"` maka pembaca kode (sekali lagi, pembaca kod
 
 Jika ingin lebih sederhana lagi,  kamu bisa membuat konvensi bersama tim, semua sub view harus memiliki atribut **id** yang sama dengan nama _file_. Jika seperti itu, `<section>` pembungkus di main view bisa dihilangkan.
 
-```html
+```blade
 <!-- dashboard.blade.php -->
 @extends('layout')
 
@@ -430,8 +433,11 @@ Jika ingin lebih sederhana lagi,  kamu bisa membuat konvensi bersama tim, semua 
     <script>
         $('#filterTahun').on('change', function(){
           $.ajax({}).done(function (data) {
-            // Dimana #summary? Sesuai konvensi, mari cari sub view yang namanya _summary.blade.php
+
             $('#summary .card').doSomething(data);
+            // Dimana #summary? 
+            // Sesuai konvensi, mari cari sub view yang namanya _summary.blade.php
+
             $('#chart').doSomething(data);
             $('#popularPost').doSomething(data);
           });
@@ -449,7 +455,7 @@ Pernahkan kamu mengalami momen dimana sedang asik  _debugging_, lalu menemukan s
 
 Kode seperti itu umum dijumpai di file Blade untuk _layouting_.
 
-```html
+```blade
 <!-- resources/view/layout.blade.php -->
 <html>
     <head>
@@ -459,7 +465,7 @@ Kode seperti itu umum dijumpai di file Blade untuk _layouting_.
         <header>
             @foreach($categories as $item)
             <a href="{{ $item->permalink }}">{{ $item->title }}</a>
-            @endoreach
+            @endforeach
         </header>
         {{ $slot }}
     </body>
@@ -493,7 +499,7 @@ Keduanya sama, secara _magic_ mendaftarkan variabel baru yang bisa diakses dari 
 Ada satu fitur di Laravel yang harusnya lebih manusiawi jika dipakai untuk mendaftarkan variabel ke View, yaitu **Service Injection**.
 
 Sekarang mari kita implementasikan kasus `$categories` dengan Service Injection:
-```html
+```blade
 @inject('site', 'App\Services\SiteService')
 
 <html>
@@ -504,7 +510,7 @@ Sekarang mari kita implementasikan kasus `$categories` dengan Service Injection:
         <header>
             @foreach($site->categories() as $item)
             <a href="{{ $item->permalink }}">{{ $item->title }}</a>
-            @endoreach
+            @endforeach
         </header>
         {{ $slot }}
     </body>
@@ -518,7 +524,7 @@ Tidak perlu lagi menerka-nerka, `dd()`, atau bertanya ke programmer lain. Petunj
 > Dokumentasi resmi tentang **Service Injection** bisa dibaca di https://laravel.com/docs/master/blade#service-injection.
 
 Pilihan lain yang lebih tepat adalah membuat **Blade Component** khusus untuk me-render kategori.
-```html
+```blade
 <!-- resources/views/layout.blade.php -->
 <!-- Lihat betapa bersihnya kode HTML jika memakai Blade Component       -->
 <html>
@@ -570,7 +576,7 @@ Beberapa manfaat yang bisa kita dapat ketika menerapkannya antara lain:
 #### 1. Didokumentasikan Secara Eksplisit
 Biasakan mengomentasi bagian kode yang "_magic_" untuk membantu programmer lain (atau dirimu sendiri, 3 bulan kemudian) ketika membacanya:
 
-```html
+```blade
 <!-- layout.blade.php -->
 
 <!-- @kategori berasal dari ViewComposerServiceProvider -->
@@ -602,7 +608,8 @@ Secara singkat, perbedaan Sub View dan Blade Component bisa dilihat dalam tabel 
 
 Terkadang, pilihannya bukan mana yang benar atau salah, tapi **mana yang lebih cocok** dengan kondisi tim.
 
-Dalam dokumentasi resmi Laravel terkait Blade Component, https://laravel.com/docs/master/blade#components,  disebutkan: " _Components and slots provide similar benefits to sections, layouts, and includes; however, some may find the **mental model** of components and slots easier to understand_".
+Dalam dokumentasi resmi Laravel terkait Blade Component, https://laravel.com/docs/master/blade#components,  disebutkan: 
+" **_Components and slots provide similar benefits to sections, layouts, and includes; however, some may find the **mental model** of components and slots easier to understand_**".
 
 
 Kata kuncinya adalah **mental model**. Bagaimana kita mau memodelkan aplikasi. Bagaimana kita menerjemahkan kebutuhan bisnis menjadi struktur kode yang _long lasting_ dan tetap mudah di-_maintain_, tiga bulan lagi, 6 bulan lagi, bahkan bertahun-tahun dari sekarang.

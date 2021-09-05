@@ -1,5 +1,7 @@
 {
     "require": {
-        "themsaid/ibis": "^0.1.4"
+        "themsaid/ibis": "dev-master",
+        "torchlight/torchlight-ibis": "^0.1.0",
+        "vlucas/phpdotenv": "^5.3"
     }
 }

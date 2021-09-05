@@ -145,7 +145,7 @@ protected function uploadCover($request)
 {
   $cover = null;
 
-  if($request->file('cover')) {
+  if ($request->file('cover')) {
     $file = $request->file('cover');
     $dt = Carbon::now();
     $acak  = $file->getClientOriginalExtension();
@@ -263,7 +263,9 @@ trait UploadCoverTrait
             $file = $request->file('cover');
             $dt = Carbon::now();
             $acak = $file->getClientOriginalExtension();
-            $fileName = rand(11111, 99999).'-'.$dt->format('Y-m-d-H-i-s').'.'.$acak;
+            $fileName = rand(11111, 99999)
+                        .'-'.$dt->format('Y-m-d-H-i-s')
+                        .'.'.$acak;
             $request->file('cover')->move("images/buku", $fileName);
             $cover = $fileName;
         }
@@ -325,7 +327,7 @@ Terlebih lagi jika aplikasi yang sedang dikembangkan bertipikal CRUD, aturan **m
 | Satu tabel      | PostController          | index (tampilkan semua post) <br> store (menyimpan Post baru) <br> destroy (hapus permanen sebuah Post) |
 | Banyak tabel    | StatisticController     | index                                                        |
 | Sub tabel       | PublishedPostController | store (publish post) <br> destroy (unpublish post)           |
-| Kolom tertentu  | PasswordController      | edit <br> update <br> ~~destroy~~ (password tidak bisa didelete) |
+| Kolom tertentu  | PasswordController      | edit <br> update <br> <del>destroy</del> (password tidak bisa didelete) |
 | Entitas lain    | DbBackupController      | index (tampilkan semua backup)<br> store (menambah backup baru)<br> destroy (hapus salah satu backup) |
 
 ### Berpikir Resource
@@ -390,7 +392,8 @@ UserController@uploadProfilePicture
 // Resource Controller
 UserProfilePicture@update
   
-// Pola yang mirip, disini kita memecah `uploadProfilePicture` menjadi resource tersendiri:
+// Pola yang mirip, disini kita memecah `uploadProfilePicture`
+// menjadi resource tersendiri:
 // ProfilePicture (atau UserProfilePicture agar lebih jelas) + method update.
 ```
 
@@ -487,8 +490,8 @@ class PostController extends Controller
 
         if ($validator->fails()) {
             return redirect('post/create')
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         // Store the blog post...
@@ -735,7 +738,7 @@ localhost/post/xxx
 
 Memakai MySQL atau MariaDB biasanya aman-aman saja. Tetapi jika dijalankan dengan PostgreSQL akan menimbulkan error:
 
-```sql
+```text
 Illuminate\Database\QueryException
 SQLSTATE[22P02]: Invalid text representation: 7 ERROR: invalid input syntax for integer: "abc" (SQL: select * from "posts" where "id" = abc limit 1)
 ```
@@ -763,7 +766,7 @@ Ternyata tidak berhasil.
 
 Yang ada justru *another error*:
 
-```
+```text
 TypeError
 App\Http\Controllers\PostController::show(): Argument #2 ($id) must be of type int, string given, called in /Volumes/Code/laravolt-sandbox/vendor/laravel/framework/src/Illuminate/Routing/Controller.php on line 54
 ```

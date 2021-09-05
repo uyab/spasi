@@ -1,0 +1,31 @@
+/*
+ Margin and rounding are personal preferences,
+ overflow-x-auto is recommended.
+*/
+pre {
+    page-break-inside: avoid;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: .9em;
+}
+
+/*
+ Add some vertical padding and expand the width
+ to fill its container. The horizontal padding
+ comes at the line level so that background
+ colors extend edge to edge.
+*/
+pre code.torchlight {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+/*
+ Horizontal line padding to match the vertical
+ padding from the code block above. Vertical
+ for line height.
+*/
+pre code.torchlight .line {
+    padding: 2px 16px;
+}

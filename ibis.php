@@ -1,5 +1,9 @@
 <?php
 
+require_once __DIR__.'/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 return [
     /**
      * The book title.
@@ -20,9 +24,6 @@ return [
         'heading3' => 'Inter-Bold.ttf',
         'heading4' => 'Inter-Bold.ttf',
         'body' => 'Inter.ttf',
-        // 'body' => 'NotoSerif-Regular.ttf',
-        // 'body' => 'Literata.ttf',
-        // 'monospace' => 'FiraCode.ttf',
         'monospace' => 'JetBrainsMono.ttf',
         'quote' => 'JetBrainsMono.ttf',
     ],
@@ -55,9 +56,17 @@ return [
         [100, 103],
     ],
 
+    'toc_levels' => [
+        'H1' => 0,
+        'H2' => 1,
+    ],
     /**
      * A notice printed at the final page of a generated sample.
      */
     'sample_notice' => 'Ini adalah contoh isi buku "Spasi" oleh Uyab. <br> 
                         <a href="https://theboringstack.com/">Klik disini untuk info lengkap</a>.',
+
+    'configure_commonmark' => function ($environment) {
+        \Torchlight\Ibis\TorchlightExtension::make()->register($environment);
+    },
 ];
