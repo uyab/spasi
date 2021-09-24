@@ -323,13 +323,10 @@ Untuk setiap sub view membutuhkan kode Javascript, maka kodenya cukup ditulis di
 @extends('layout')
 
 @section('content')
-
     <h1>Dashboard</h1>
-    
     @include('_summary')
     @include('_chart')
-    @include('_popularPost')
-    
+    @include('_popularPost')    
 @endsection
 
 <!-- _popularPost.blade.php -->
